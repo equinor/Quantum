@@ -1,30 +1,31 @@
-import React from "react";
+import React from 'react';
 import Table from 'react-bootstrap/Table';
-
-interface CommissioningPackage {
-  CommissioningPackageNo: string;
-  Facility: string;
-  Priority3: string;
-  CommissioningPhase: string;
-}
 
 interface ProfileDataProps {
   graphqlData: {
     data: {
       commissioningPackages: {
-        items: CommissioningPackage[];
+        items: {
+          CommissioningPackageNo: string;
+          Facility: string;
+          Priority3: string;
+          CommissioningPhase: string;
+        }[];
       };
     };
   };
 }
 
-export const ProfileData: React.FC<ProfileDataProps> = ({ graphqlData }) => {
-  const holidays = graphqlData.data.commissioningPackages.items;
+/**
+ * Renders information about the user obtained from MS Graph
+ * @param props
+ */
+export const ProfileData: React.FC<ProfileDataProps> = (props) => {
+  const holidays = props.graphqlData.data.commissioningPackages.items;
   const commpkgCount = holidays.length;
-
   return (
     <Table striped bordered hover responsive>
-      <h3>total: {commpkgCount}</h3>
+      <h3> total: {commpkgCount}</h3>
       <thead>
         <tr>
           <th>Commpkg</th>
@@ -46,5 +47,3 @@ export const ProfileData: React.FC<ProfileDataProps> = ({ graphqlData }) => {
     </Table>
   );
 };
-
-export default ProfileData;
