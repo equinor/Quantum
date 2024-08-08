@@ -2,16 +2,16 @@ import { useMsal } from "@azure/msal-react";
 import Button from "react-bootstrap/esm/Button";
 
 /**
- * Renders a sign out button 
+ * Renders a sign out button
  */
 export const SignOutButton = () => {
   const { instance } = useMsal();
 
   const handleLogout = () => {
-      instance.logoutPopup({
-        postLogoutRedirectUri: "/",
-        mainWindowRedirectUri: "/",
-      });
+    instance.logoutPopup({
+      postLogoutRedirectUri: "/",
+      mainWindowRedirectUri: "/",
+    });
   };
 
   return (

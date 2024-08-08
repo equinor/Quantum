@@ -3,7 +3,8 @@ import { Nav, Navbar } from "react-bootstrap";
 import { useIsAuthenticated } from "@azure/msal-react";
 import { SignInButton } from "./SignInButton";
 import { SignOutButton } from "./SignOutButton";
-import 'bootstrap/dist/css/bootstrap.css';
+import "bootstrap/dist/css/bootstrap.css";
+
 const NavbarComponent: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
 
