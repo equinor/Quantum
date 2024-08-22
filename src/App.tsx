@@ -1,12 +1,22 @@
 import "bootstrap/dist/css/bootstrap.css";
-import NavbarComponent from "./components/navbar";
+import TopBar from "./components/TopBar";
 import Home from "./pages/Home";
+import { Route, Routes } from "react-router-dom";
+import About from "./pages/About";
+import { Commpkg } from "./commpkg/Commpkgs";
+import System from "./pages/system/System";
 
 const App: React.FC = () => {
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
-      <NavbarComponent />
-      <Home></Home>
+    <div className="app" style={{ height: "100vh", width: "100vw" }}>
+      <TopBar />
+      <Routes>
+        <Route path="/" Component={Home} />
+        <Route path="/About" Component={About} />
+        <Route path="/Commpkg" Component={Commpkg} />
+        <Route path="/System" Component={System} />
+      </Routes>
+
       {/* App content goes here */}
     </div>
   );

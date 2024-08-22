@@ -4,7 +4,6 @@ import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
 } from "@azure/msal-react";
-import { Commpkg } from "../commpkg/Commpkgs";
 import "../App.css";
 
 const Home: React.FC = () => {
@@ -12,12 +11,21 @@ const Home: React.FC = () => {
     <>
       <div className="center-content">
         <AuthenticatedTemplate>
-          <Commpkg />
+          <br />
+          <br />
+          <br />
+          <br />
+          <center>
+            <h1>
+              {" "}
+              Welcome to this GraphQL test, navigate to test different objects
+            </h1>
+          </center>
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
           <h5 className="dark-text">
             <div className="center-text">
-              Welcome to GraphQL test, Sign in to try
+              Welcome to GraphQL test, Sign in to test
             </div>
           </h5>
         </UnauthenticatedTemplate>

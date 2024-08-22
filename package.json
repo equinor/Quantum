@@ -12,23 +12,27 @@
   "dependencies": {
     "@azure/msal-browser": "^3.19.1",
     "@azure/msal-react": "^2.0.21",
+    "@equinor/eds-core-react": "^0.41.1",
     "bootstrap": "^5.3.3",
     "msal": "^1.4.18",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.25.1"
+    "react-router-dom": "^6.25.1",
+    "styled-components": "^6.1.12",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.55.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "typescript": "^5.2.2",
+    "typescript": "^5.5.4",
     "vite": "^5.0.8"
   }
 }

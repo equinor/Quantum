@@ -1,35 +1,36 @@
 import React, { useState } from "react";
 import { Table, Stack, Card } from "react-bootstrap";
-import CommpkgSideSheet from "./CommpkgSideheet";
+import SystemSidesheet from "./SystemSidesheet";
 
-interface CommissioningPackage {
-  CommissioningPackageNo: string;
-  Facility: string;
-  Priority3: string;
-  CommissioningPhase: string;
+interface System {
+  SystemId: string;
+  SystemNo: string;
+  SystemDescription: string;
+  CommissioningLead: string;
+  SystemOwner: string;
+  TechnicalIntegrityResponsible: string;
+  OperationResponsible: string;
 }
 
-interface CommpkgData {
+interface SystemData {
   graphqlData: {
     data: {
-      commissioningPackages: {
-        items: CommissioningPackage[];
+      systems: {
+        items: System[];
       };
     };
   };
 }
 
-export const CommpkgTable: React.FC<CommpkgData> = (props) => {
-  const commpkgs = props.graphqlData.data.commissioningPackages.items;
+export const SystemTable: React.FC<SystemData> = (props) => {
+  const commpkgs = props.graphqlData.data.systems.items;
   const commpkgCount = commpkgs.length;
 
   const [show, setShow] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<CommissioningPackage | null>(
-    null
-  );
+  const [selectedItem, setSelectedItem] = useState<System | null>(null);
 
   const handleClose = () => setShow(false);
-  const handleShow = (item: CommissioningPackage) => {
+  const handleShow = (item: System) => {
     setSelectedItem(item);
     setShow(true);
   };
@@ -47,26 +48,26 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
         <Table striped bordered hover responsive variant="dark">
           <thead>
             <tr>
-              <th style={{ width: "20%" }}>Commpkg</th>
-              <th style={{ width: "20%" }}>Facility</th>
-              <th style={{ width: "30%" }}>Safety Milestone</th>
-              <th style={{ width: "30%" }}>Phase</th>
+              <th style={{ width: "20%" }}>SystemId</th>
+              <th style={{ width: "20%" }}>SystemNo</th>
+              <th style={{ width: "30%" }}>SystemDescription</th>
+              <th style={{ width: "30%" }}>SystemOwner</th>
             </tr>
           </thead>
           <tbody>
             {commpkgs.map((item, i) => (
               <tr key={i} onClick={() => handleShow(item)}>
-                <td>{item.CommissioningPackageNo}</td>
-                <td>{item.Facility}</td>
-                <td>{item.Priority3}</td>
-                <td>{item.CommissioningPhase}</td>
+                <td>{item.SystemId}</td>
+                <td>{item.SystemNo}</td>
+                <td>{item.SystemDescription}</td>
+                <td>{item.SystemOwner}</td>
               </tr>
             ))}
           </tbody>
         </Table>
       </div>
 
-      <CommpkgSideSheet
+      <SystemSidesheet
         show={show}
         handleClose={handleClose}
         selectedItem={selectedItem}

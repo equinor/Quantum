@@ -1,6 +1,6 @@
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../authConfig";
-
+import { useIsAuthenticated } from "@azure/msal-react";
 import Button from "react-bootstrap/esm/Button";
 
 /**
@@ -8,22 +8,31 @@ import Button from "react-bootstrap/esm/Button";
  * Note the [useMsal] package
  */
 
-export const SignInButton = () => {
+export const Login = () => {
   const { instance } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
 
   const handleLogin = () => {
     instance.loginPopup(loginRequest).catch((e) => {
       console.log(e);
     });
   };
+
+  const handleLogout = () => {
+    instance.logoutPopup({
+      postLogoutRedirectUri: "/",
+      mainWindowRedirectUri: "/",
+    });
+  };
+
   return (
     <Button
       variant="outline-light"
       className="ml-auto"
-      onClick={() => handleLogin()}
-      title="Sign In"
+      onClick={isAuthenticated ? handleLogout : handleLogin}
+      title={isAuthenticated ? "Sign Out" : "Sign In"}
     >
-      Sign In
+      {isAuthenticated ? "Sign Out" : "Sign In"}
     </Button>
   );
 };
