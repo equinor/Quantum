@@ -43,4 +43,13 @@
 
 .custom-close-button .btn-close {
   filter: invert(1);
+  width: 40px;
+}
+
+.brand {
+  padding-left: 10px;
+}
+
+.delete-btn {
+  margin-left: 20px;
 }

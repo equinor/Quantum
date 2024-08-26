@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, Offcanvas } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { SystemData } from "./SystemData";
+import "../../App.css";
 
 interface System {
   SystemId: string;
@@ -101,7 +102,7 @@ updateSystem(SystemId: $systemId,item:{SystemOwner: $systemOwner} )  {
     >
       <Offcanvas.Header
         closeButton
-        className="custom-close-button"
+        className="custom-close-button d-flex justify-content-between"
         style={{ backgroundColor: "#323539", color: "#ffffff" }}
       >
         <Offcanvas.Title>Commissioning Package Details</Offcanvas.Title>
@@ -109,73 +110,67 @@ updateSystem(SystemId: $systemId,item:{SystemOwner: $systemOwner} )  {
       <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
         {selectedItem ? (
           <div>
-            <p>
-              <strong>SystemNo:</strong> {selectedItem.SystemNo}
-            </p>
-            <p>
-              <strong>SystemDescription:</strong>{" "}
-              {selectedItem.SystemDescription}
-            </p>
-            <p>
-              <strong>System Owner:</strong> {selectedItem.SystemOwner}
-            </p>
-            <p>
-              <strong>TI responsible:</strong>{" "}
-              {selectedItem.TechnicalIntegrityResponsible}
-            </p>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="formSystemNo">
+                <Form.Label>System No</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={systemNo}
+                  onChange={(e) => setSystemNo(e.target.value)}
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="formSystemDescription">
+                <Form.Label>System Description</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={systemDescription}
+                  onChange={(e) => setSystemDescription(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="formSystemOwner">
+                <Form.Label>System Owner</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={systemOwner}
+                  onChange={(e) => setSystemOwner(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="formTechnicalIntegrityResponsible">
+                <Form.Label>Technical Integrity Responsible</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={technicalIntegrityResponsible}
+                  onChange={(e) =>
+                    setTechnicalIntegrityResponsible(e.target.value)
+                  }
+                />
+              </Form.Group>
+              <Form.Group controlId="formOperationResponsible">
+                <Form.Label>Operation Responsible</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={operationResponsible}
+                  onChange={(e) => setOperationResponsible(e.target.value)}
+                />
+              </Form.Group>
+              <br />
+
+              <Button variant="secondary" type="submit">
+                Update System
+              </Button>
+              <Button
+                className="delete-btn"
+                variant="danger"
+                onClick={deleteSystem}
+              >
+                Delete System
+              </Button>
+            </Form>
           </div>
         ) : (
           <p>No system selected.</p>
         )}
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formSystemNo">
-            <Form.Label>System No</Form.Label>
-            <Form.Control
-              type="text"
-              value={systemNo}
-              onChange={(e) => setSystemNo(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formSystemDescription">
-            <Form.Label>System Description</Form.Label>
-            <Form.Control
-              type="text"
-              value={systemDescription}
-              onChange={(e) => setSystemDescription(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formSystemOwner">
-            <Form.Label>System Owner</Form.Label>
-            <Form.Control
-              type="text"
-              value={systemOwner}
-              onChange={(e) => setSystemOwner(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formTechnicalIntegrityResponsible">
-            <Form.Label>Technical Integrity Responsible</Form.Label>
-            <Form.Control
-              type="text"
-              value={technicalIntegrityResponsible}
-              onChange={(e) => setTechnicalIntegrityResponsible(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formOperationResponsible">
-            <Form.Label>Operation Responsible</Form.Label>
-            <Form.Control
-              type="text"
-              value={operationResponsible}
-              onChange={(e) => setOperationResponsible(e.target.value)}
-            />
-          </Form.Group>
-          <Button variant="secondary" type="submit">
-            Update System
-          </Button>
-        </Form>
-        <Button variant="secondary" onClick={deleteSystem}>
-          Delete System
-        </Button>
       </Offcanvas.Body>
     </Offcanvas>
   );

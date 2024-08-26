@@ -4,12 +4,15 @@ import { Login } from "./Login";
 import "bootstrap/dist/css/bootstrap.css";
 import { useIsAuthenticated } from "@azure/msal-react";
 import { Link } from "react-router-dom";
+import "../App.css";
 
 const TopBar: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
   return (
     <Navbar bg="dark" data-bs-theme="dark" className="navbarStyle">
-      <Navbar.Brand href="#home">GraphQL test</Navbar.Brand>
+      <Navbar.Brand className="brand" href="#home">
+        Quantum
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         {isAuthenticated ? (

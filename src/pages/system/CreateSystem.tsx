@@ -133,7 +133,7 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
               onChange={(e) => setOperationResponsible(e.target.value)}
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button variant="secondary" type="submit">
             Create System
           </Button>
         </Form>
