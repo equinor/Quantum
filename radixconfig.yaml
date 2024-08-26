@@ -1,0 +1,30 @@
+apiVersion: radix.equinor.com/v1
+kind: RadixApplication
+metadata:
+  name: quantum
+spec:
+  build:
+    useBuildKit: true
+    useBuildCache: true
+
+  environments:
+    - name: dev
+      build:
+        from: dev
+
+  components:
+    - name: frontend
+      src: "."
+      ports:
+        - name: http
+          port: 8080
+      publicPort: http
+      environmentConfig:
+        - environment: dev
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "400m"
+            limits:
+              memory: "4096Mi"
+              cpu: "800m"

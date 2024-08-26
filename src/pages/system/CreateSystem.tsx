@@ -24,7 +24,7 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
   handleClose,
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
-  const [systemId, setSystemId] = useState<string>("");
+  const [systemId, setSystemId] = useState<string>("sys-" + uuidv4());
   const [systemNo, setSystemNo] = useState<string>("");
   const [systemDescription, setSystemDescription] = useState<string>("");
   const [systemOwner, setSystemOwner] = useState<string>("");
@@ -33,20 +33,29 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
   const [operationResponsible, setOperationResponsible] = useState<string>("");
 
   const handleSubmit = () => {
+    //event.preventDefault(); // Prevent form submission from reloading the page
     const newSystemId = uuidv4();
-    setSystemId(newSystemId);
+    setSystemId("sys-" + newSystemId);
+    console.log(newSystemId);
+    console.log(systemId);
     const mutation = `
- mutation createSystem($systemId: String!, $systemNo: String!, $systemDescription: String!) {
-  createSystem(item:{
-    SystemId: $systemId
-    SystemNo: $systemNo
-    SystemDescription: $systemDescription
-  })  {
-     result
-     
-  }
-}
-    `;
+      mutation 
+        createSystem(
+          $systemId: String!
+          ,$systemNo: String!
+          ,$systemDescription: String!) {
+        createSystem(
+          item:{
+            SystemId: $systemId
+            SystemNo: $systemNo
+            SystemDescription: $systemDescription
+          }
+        )  
+        {
+        result
+        }
+      }
+      `;
     const input = {
       systemId,
       systemNo,
