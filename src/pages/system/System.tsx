@@ -61,7 +61,7 @@ export const System: React.FC = () => {
           Create System
         </Button>
         {SystemData ? (
-          <SystemTable graphqlData={{ data: SystemData }} />
+          <SystemTable systems={SystemData.systems} />
         ) : (
           <h1>No Data to display</h1>
         )}

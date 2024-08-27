@@ -2,21 +2,12 @@ import React, { useState } from "react";
 import { Offcanvas, Form, Button } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
-import { SystemData } from "./SystemData";
-interface System {
-  SystemId: string;
-  SystemNo: string;
-  SystemDescription: string;
-  CommissioningLead: string;
-  SystemOwner: string;
-  TechnicalIntegrityResponsible: string;
-  OperationResponsible: string;
-}
+import { SystemData, SystemItem } from "./SystemData";
 
 interface CommpkgSideSheetProps {
   show: boolean;
   handleClose: () => void;
-  selectedItem: System | null;
+  selectedItem: SystemItem | null;
 }
 
 const CreateSystem: React.FC<CommpkgSideSheetProps> = ({

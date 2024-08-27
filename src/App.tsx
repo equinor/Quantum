@@ -3,7 +3,7 @@ import TopBar from "./components/TopBar";
 import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
 import About from "./pages/About";
-import { Commpkg } from "./commpkg/Commpkgs";
+import { Commpkg } from "./pages/commpkg/Commpkgs";
 import System from "./pages/system/System";
 
 const App: React.FC = () => {

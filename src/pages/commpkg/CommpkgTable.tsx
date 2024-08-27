@@ -1,35 +1,17 @@
 import React, { useState } from "react";
 import { Table, Stack, Card } from "react-bootstrap";
 import CommpkgSideSheet from "./CommpkgSideheet";
-
-interface CommissioningPackage {
-  CommissioningPackageNo: string;
-  Facility: string;
-  Priority3: string;
-  CommissioningPhase: string;
-}
-
-interface CommpkgData {
-  graphqlData: {
-    data: {
-      commissioningPackages: {
-        items: CommissioningPackage[];
-      };
-    };
-  };
-}
+import { CommpkgItem, CommpkgData } from "./CommpkgData";
 
 export const CommpkgTable: React.FC<CommpkgData> = (props) => {
-  const commpkgs = props.graphqlData.data.commissioningPackages.items;
+  const commpkgs = props.commissioningPackages.items;
   const commpkgCount = commpkgs.length;
 
   const [show, setShow] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<CommissioningPackage | null>(
-    null
-  );
+  const [selectedItem, setSelectedItem] = useState<CommpkgItem | null>(null);
 
   const handleClose = () => setShow(false);
-  const handleShow = (item: CommissioningPackage) => {
+  const handleShow = (item: CommpkgItem) => {
     setSelectedItem(item);
     setShow(true);
   };

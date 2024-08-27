@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { CommpkgTable } from "./CommpkgTable";
-import "../App.css";
+import "../../App.css";
 import { Button, Spinner, Form, InputGroup } from "react-bootstrap";
-import { useRequestGraphQL } from "../graphql/GetGraphQL";
+import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
 
 export const Commpkg: React.FC = () => {
@@ -74,7 +74,9 @@ export const Commpkg: React.FC = () => {
           )}
         </Button>
         {commpkgData ? (
-          <CommpkgTable graphqlData={{ data: commpkgData }} />
+          <CommpkgTable
+            commissioningPackages={commpkgData.commissioningPackages}
+          />
         ) : (
           <h1>Get Data</h1>
         )}

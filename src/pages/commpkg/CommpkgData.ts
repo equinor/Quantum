@@ -5,8 +5,12 @@ export interface CommpkgItem {
   CommissioningPhase: string;
 }
 
+export interface CommpkgConnection {
+  items: CommpkgItem[];
+  endCursor: string | null;
+  hasNextPage: boolean;
+}
+
 export interface CommpkgData {
-  commissioningPackages: {
-    items: CommpkgItem[];
-  };
+  commissioningPackages: CommpkgConnection;
 }
