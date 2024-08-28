@@ -19,6 +19,7 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
   const [systemNo, setSystemNo] = useState<string>("");
   const [systemDescription, setSystemDescription] = useState<string>("");
   const [systemOwner, setSystemOwner] = useState<string>("");
+  const [commissioningLead, setcommissioningLead] = useState<string>("");
   const [technicalIntegrityResponsible, setTechnicalIntegrityResponsible] =
     useState<string>("");
   const [operationResponsible, setOperationResponsible] = useState<string>("");
@@ -34,12 +35,21 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
         createSystem(
           $systemId: String!
           ,$systemNo: String!
-          ,$systemDescription: String!) {
+          ,$systemDescription: String!
+          ,$systemOwner: String!
+          ,$commissioningLead: String!
+          ,$technicalIntegrityResponsible: String!
+          ,$operationResponsible: String!
+          ) {
         createSystem(
           item:{
             SystemId: $systemId
             SystemNo: $systemNo
             SystemDescription: $systemDescription
+            SystemOwner: $systemOwner
+            CommissioningLead: $commissioningLead
+            TechnicalIntegrityResponsible: $technicalIntegrityResponsible
+            OperationResponsible: $operationResponsible
           }
         )  
         {
@@ -51,6 +61,10 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
       systemId,
       systemNo,
       systemDescription,
+      systemOwner,
+      commissioningLead,
+      technicalIntegrityResponsible,
+      operationResponsible,
     };
     RequestGraphQL<SystemData>(mutation, input, (data: SystemData) => {
       console.log("System created:", data);
@@ -106,6 +120,14 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
               type="text"
               value={systemOwner}
               onChange={(e) => setSystemOwner(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group controlId="formCommissioningLead">
+            <Form.Label>Commissioning Lead</Form.Label>
+            <Form.Control
+              type="text"
+              value={commissioningLead}
+              onChange={(e) => setcommissioningLead(e.target.value)}
             />
           </Form.Group>
           <Form.Group controlId="formTechnicalIntegrityResponsible">

@@ -32,6 +32,7 @@ const SystemSideSheet: React.FC<CommpkgSideSheetProps> = ({
   );
   const [systemDescription, setSystemDescription] = useState<string>("");
   const [systemOwner, setSystemOwner] = useState<string>("");
+  const [commissioningLead, setcommissioningLead] = useState<string>("");
   const [technicalIntegrityResponsible, setTechnicalIntegrityResponsible] =
     useState<string>("");
   const [operationResponsible, setOperationResponsible] = useState<string>("");
@@ -51,8 +52,24 @@ const SystemSideSheet: React.FC<CommpkgSideSheetProps> = ({
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const mutation = `
-    mutation updateSystem($systemId: String!, $systemOwner: String!) {
-updateSystem(SystemId: $systemId,item:{SystemOwner: $systemOwner} )  {
+    mutation 
+      updateSystem(
+        $systemId: String!, 
+        $systemNo: String!,
+        $systemOwner: String!,
+        $systemDescription: String!,
+        $technicalIntegrityResponsible:String!,
+        $operationResponsible: String!
+        $commissioningLead: String!
+        ) {
+      updateSystem(SystemId: $systemId,item:{
+        SystemOwner: $systemOwner,
+        SystemNo: $systemNo
+        SystemDescription: $systemDescription,
+        CommissioningLead: $commissioningLead,
+        TechnicalIntegrityResponsible: $technicalIntegrityResponsible,
+        OperationResponsible: $operationResponsible
+      } )  {
    result
 }
 }
@@ -60,6 +77,11 @@ updateSystem(SystemId: $systemId,item:{SystemOwner: $systemOwner} )  {
     const variables = {
       systemId: deleteId,
       systemOwner,
+      systemNo,
+      systemDescription,
+      commissioningLead,
+      technicalIntegrityResponsible,
+      operationResponsible,
     };
     RequestGraphQL<SystemData>(mutation, variables, (data: SystemData) => {
       console.log("System updated:", data);
@@ -134,6 +156,14 @@ updateSystem(SystemId: $systemId,item:{SystemOwner: $systemOwner} )  {
                   type="text"
                   value={systemOwner}
                   onChange={(e) => setSystemOwner(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group controlId="formCommissioningLead">
+                <Form.Label>Commissioning Lead</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={commissioningLead}
+                  onChange={(e) => setcommissioningLead(e.target.value)}
                 />
               </Form.Group>
               <Form.Group controlId="formTechnicalIntegrityResponsible">

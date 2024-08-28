@@ -10,19 +10,13 @@ const TopBar: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
   return (
     <Navbar bg="dark" data-bs-theme="dark" className="navbarStyle">
-      <Navbar.Brand className="brand" href="#home">
+      <Navbar.Brand className="brand" as={Link} to="/">
         Quantum
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         {isAuthenticated ? (
           <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/">
-              Home
-            </Nav.Link>
-            <Nav.Link as={Link} to="/About">
-              About
-            </Nav.Link>
             <Nav.Link as={Link} to="/Commpkg">
               Commpkg
             </Nav.Link>
