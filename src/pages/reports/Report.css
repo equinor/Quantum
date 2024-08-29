@@ -1,0 +1,16 @@
+.report {
+  height: "100vh";
+  width: "100vw";
+}
+
+/* Report.css */
+.report-container {
+  height: 100vh; /* Adjust this value as needed */
+  display: flex;
+  flex-direction: column;
+}
+
+.Embed-container {
+  flex: 1;
+  height: 100%;
+}

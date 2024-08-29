@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { Commpkg } from "./pages/commpkg/Commpkgs";
 import System from "./pages/system/System";
+import Report from "./pages/reports/Report";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <Route path="/" Component={Home} />
         <Route path="/Commpkg" Component={Commpkg} />
         <Route path="/System" Component={System} />
+        <Route path="/Report" Component={Report} />
       </Routes>
 
       {/* App content goes here */}

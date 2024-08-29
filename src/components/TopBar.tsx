@@ -23,6 +23,9 @@ const TopBar: React.FC = () => {
             <Nav.Link as={Link} to="/System">
               Systems
             </Nav.Link>
+            <Nav.Link as={Link} to="/Report">
+              Report
+            </Nav.Link>
           </Nav>
         ) : (
           <></>
