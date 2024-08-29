@@ -18,9 +18,9 @@ export const graphqlConfig = {
 
 export const msalConfig = {
   auth: {
-    clientId: "c4c87187-cfeb-40a5-8b72-a87ca9e992e2",
+    clientId: "7d91af14-e409-469e-936e-cb82db1ebb55",
     authority:
-      "https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0",
+      "https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/oauth2/v2.0/token",
     redirectUri: window.location.origin,
   },
   cache: {
@@ -54,6 +54,7 @@ export const msalConfig = {
             return;
         }
       },
+      LogLevel: LogLevel.Verbose,
     },
   },
 };
@@ -68,6 +69,7 @@ export const loginRequest = {
   scopes: [
     "https://analysis.windows.net/powerbi/api/Item.Execute.All",
     "https://analysis.windows.net/powerbi/api/Datamart.ReadWrite.All",
+    "https://analysis.windows.net/powerbi/api/Report.ReadWrite.All",
   ],
 };
 
