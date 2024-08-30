@@ -4,6 +4,15 @@ import "../../App.css";
 import { Button, Spinner, Form, InputGroup } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export const Commpkg: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
@@ -19,13 +28,27 @@ export const Commpkg: React.FC = () => {
   const fetchCommpkgData = () => {
     const query = `query getCommpkg($facility: String!) {
       commissioningPackages(
-        filter: { Facility: { eq: $facility } }
+        filter: { Facility: { eq: $facility } Priority3:  {
+           isNull: false
+        } }
       ) {
         items {
           CommissioningPackageNo,
           Facility,
           Priority3,
           CommissioningPhase
+          commissioningPackageMilestone(filter:  {
+             Milestone:  {
+                eq: "C-08"
+             }
+          } ) {
+             items {
+                ForecastDate
+                PlannedDate
+                ActualDate
+                
+             }
+          }
         }
       }
     }`;
@@ -37,6 +60,22 @@ export const Commpkg: React.FC = () => {
       setCommpkgData(data);
       setDisplay(false);
     });
+  };
+
+  const transformData = (data: CommpkgData) => {
+    const groupedData = data.commissioningPackages.items.reduce((acc, item) => {
+      const priority = item.Priority3;
+      if (!acc[priority]) {
+        acc[priority] = 0;
+      }
+      acc[priority]++;
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.keys(groupedData).map((key) => ({
+      Priority3: key,
+      Commpkgs: groupedData[key],
+    }));
   };
 
   return (
@@ -74,9 +113,23 @@ export const Commpkg: React.FC = () => {
           )}
         </Button>
         {commpkgData ? (
-          <CommpkgTable
-            commissioningPackages={commpkgData.commissioningPackages}
-          />
+          <>
+            <BarChart
+              width={600}
+              height={300}
+              data={transformData(commpkgData)}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="Priority3" />
+              <YAxis />
+              <Tooltip />
+              <Legend formatter={() => "Priority 3"} />
+              <Bar dataKey="Commpkgs" fill="#8884d8" />
+            </BarChart>
+            <CommpkgTable
+              commissioningPackages={commpkgData.commissioningPackages}
+            />
+          </>
         ) : (
           <h1>Get Data</h1>
         )}
