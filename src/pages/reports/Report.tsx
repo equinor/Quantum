@@ -25,7 +25,7 @@ const Report: React.FC = () => {
   }, []);
 
   return (
-    <div className="report-container">
+    <div id="report-container">
       <Stack>
         <ReportMenu />
         <PowerBIEmbed
@@ -48,31 +48,9 @@ const Report: React.FC = () => {
               },
             },
           }}
-          eventHandlers={
-            new Map<string, (event?: any) => void>([
-              [
-                "loaded",
-                function () {
-                  console.log("Report loaded");
-                },
-              ],
-              [
-                "rendered",
-                function () {
-                  console.log("Report rendered");
-                },
-              ],
-              [
-                "error",
-                function (event) {
-                  console.log(event.detail);
-                },
-              ],
-            ])
-          }
           cssClassName={"Embed-container"}
-          getEmbeddedComponent={(embeddedReport) => {
-            (window as any).report = embeddedReport;
+          getEmbeddedComponent={(embed) => {
+            embed.on("loaded", () => {});
           }}
         />
       </Stack>

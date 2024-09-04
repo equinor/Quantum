@@ -9,7 +9,7 @@ import Report from "./pages/reports/Report";
 
 const App: React.FC = () => {
   return (
-    <div className="app" style={{ height: "100vh", width: "100vw" }}>
+    <div id="page-container" style={{ height: "100vh", width: "100vw" }}>
       <TopBar />
       <Routes>
         <Route path="/" Component={Home} />
