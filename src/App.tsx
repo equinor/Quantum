@@ -15,7 +15,7 @@ const App: React.FC = () => {
         <Route path="/" Component={Home} />
         <Route path="/Commpkg" Component={Commpkg} />
         <Route path="/System" Component={System} />
-        <Route path="/Report" Component={Report} />
+        <Route path="/Report/:id" Component={Report} />
       </Routes>
 
       {/* App content goes here */}
