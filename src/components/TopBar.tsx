@@ -13,32 +13,31 @@ type ReportData = {
   embedUrl: string;
 };
 
+const fetchReports = async (groupId: string, accessToken: string) => {
+  const url = `https://api.powerbi.com/v1.0/myorg/groups/${groupId}/reports`;
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  const data = await response.json();
+  return data.value; // Assuming the API response has a 'value' property containing the reports
+};
+
 const TopBar: React.FC = () => {
   const isAuthenticated = useIsAuthenticated();
   const [reports, setReports] = useState<ReportData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  const fetchReports = async (groupId: string, accessToken: string) => {
-    const url = `https://api.powerbi.com/v1.0/myorg/groups/${groupId}/reports`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    const data = await response.json();
-    setReports(data.value); // Assuming the API response has a 'value' property containing the reports
-    console.log(reports);
-  };
 
   useEffect(() => {
     const groupId = "8de382f7-c5d4-413a-adb0-fbf34341d27e";
@@ -47,7 +46,8 @@ const TopBar: React.FC = () => {
       try {
         console.log("Getting access token");
         const token = await getAccessToken();
-        await fetchReports(groupId, token);
+        const reportsData = await fetchReports(groupId, token);
+        setReports(reportsData);
       } catch (error) {
         console.error("Error fetching access token or reports:", error);
         setError("Failed to fetch reports.");
@@ -77,9 +77,6 @@ const TopBar: React.FC = () => {
             </Nav.Link>
             <Nav.Link as={Link} to="/System">
               Systems
-            </Nav.Link>
-            <Nav.Link as={Link} to="/Report">
-              Report
             </Nav.Link>
             <Dropdown>
               <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
