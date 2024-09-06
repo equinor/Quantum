@@ -4,21 +4,14 @@ import "../../App.css";
 import { Button, Spinner, Form, InputGroup } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from "recharts";
+import CommpkgAnalytics from "./CommpkgAnalytics";
 
 export const Commpkg: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
   const [commpkgData, setCommpkgData] = useState<CommpkgData | null>(null);
   const [display, setDisplay] = useState<boolean>(false);
   const [facility, setFacility] = useState<string>("JCA");
+  const [view, setView] = useState<string>("Table");
 
   const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const val = event.target.value;
@@ -28,6 +21,7 @@ export const Commpkg: React.FC = () => {
   const fetchCommpkgData = () => {
     const query = `query getCommpkg($facility: String!) {
       commissioningPackages(
+      first: 2000
         filter: { Facility: { eq: $facility } Priority3:  {
            isNull: false
         } }
@@ -37,18 +31,6 @@ export const Commpkg: React.FC = () => {
           Facility,
           Priority3,
           CommissioningPhase
-          commissioningPackageMilestone(filter:  {
-             Milestone:  {
-                eq: "C-08"
-             }
-          } ) {
-             items {
-                ForecastDate
-                PlannedDate
-                ActualDate
-                
-             }
-          }
         }
       }
     }`;
@@ -60,22 +42,6 @@ export const Commpkg: React.FC = () => {
       setCommpkgData(data);
       setDisplay(false);
     });
-  };
-
-  const transformData = (data: CommpkgData) => {
-    const groupedData = data.commissioningPackages.items.reduce((acc, item) => {
-      const priority = item.Priority3;
-      if (!acc[priority]) {
-        acc[priority] = 0;
-      }
-      acc[priority]++;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return Object.keys(groupedData).map((key) => ({
-      Priority3: key,
-      Commpkgs: groupedData[key],
-    }));
   };
 
   return (
@@ -112,24 +78,31 @@ export const Commpkg: React.FC = () => {
             "Get Commpkgs"
           )}
         </Button>
+        <Button
+          variant={view === "Table" ? "light" : "outline-light"}
+          onClick={() => setView("Table")}
+        >
+          Table
+        </Button>
+
+        <Button
+          variant={view === "Table" ? "outline-light" : "light"}
+          onClick={() => setView("Analytics")}
+        >
+          Analytics
+        </Button>
         {commpkgData ? (
-          <>
-            <BarChart
-              width={600}
-              height={300}
-              data={transformData(commpkgData)}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="Priority3" />
-              <YAxis />
-              <Tooltip />
-              <Legend formatter={() => "Priority 3"} />
-              <Bar dataKey="Commpkgs" fill="#8884d8" />
-            </BarChart>
-            <CommpkgTable
-              commissioningPackages={commpkgData.commissioningPackages}
-            />
-          </>
+          view === "Table" ? (
+            <>
+              <CommpkgTable
+                commissioningPackages={commpkgData.commissioningPackages}
+              />
+            </>
+          ) : (
+            <>
+              <CommpkgAnalytics commpkgData={commpkgData} />
+            </>
+          )
         ) : (
           <h1>Get Data</h1>
         )}
