@@ -39,25 +39,26 @@ const TopBar: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchAccessTokenAndReports = async () => {
     const groupId = "8de382f7-c5d4-413a-adb0-fbf34341d27e";
-
-    async function fetchAccessTokenAndReports() {
-      try {
-        console.log("Getting access token");
-        const token = await getAccessToken();
-        const reportsData = await fetchReports(groupId, token);
-        setReports(reportsData);
-      } catch (error) {
-        console.error("Error fetching access token or reports:", error);
-        setError("Failed to fetch reports.");
-      } finally {
-        setLoading(false);
-      }
+    try {
+      console.log("Getting access token");
+      const token = await getAccessToken();
+      const reportsData = await fetchReports(groupId, token);
+      setReports(reportsData);
+    } catch (error) {
+      console.error("Error fetching access token or reports:", error);
+      setError("Failed to fetch reports.");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    fetchAccessTokenAndReports();
-  }, []);
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchAccessTokenAndReports();
+    }
+  }, [isAuthenticated]);
 
   const handleSelectReport = (report: ReportData) => {
     navigate(`/report/${report.id}`, { state: { embedUrl: report.embedUrl } });
