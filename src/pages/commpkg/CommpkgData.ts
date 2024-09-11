@@ -1,8 +1,10 @@
 export interface CommpkgItem {
   CommissioningPackageNo: string;
-  Facility: string;
+  Priority1: string;
+  Priority2: string;
   Priority3: string;
   CommissioningPhase: string;
+  Facility: string;
   commissioningPackageMilestone: commissioningPackageMilestone;
 }
 

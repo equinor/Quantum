@@ -1,11 +1,30 @@
-import React, { useState } from "react";
-import { Table, Stack, Card } from "react-bootstrap";
-import CommpkgSideSheet from "./CommpkgSideheet";
+import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
+import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
+import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
+
+import React, { useState, useEffect } from "react";
 import { CommpkgItem, CommpkgData } from "./CommpkgData";
+import { ColDef } from "ag-grid-community";
+import CommpkgSideSheet from "./CommpkgSideheet";
 
 export const CommpkgTable: React.FC<CommpkgData> = (props) => {
   const commpkgs = props.commissioningPackages.items;
-  const commpkgCount = commpkgs.length;
+
+  const generateColDefs = (): ColDef<CommpkgItem>[] => {
+    return [
+      { field: "CommissioningPackageNo", headerName: "Comm Pkg" },
+      { field: "Priority1", headerName: "Comm Priority 1" },
+      { field: "Priority2", headerName: "Comm Priority 2" },
+      { field: "Priority3", headerName: "Comm Priority 3" },
+      { field: "CommissioningPhase", headerName: "Comm Phase" },
+      { field: "Facility", headerName: "Facility" },
+      // Add more fields dynamically if needed
+    ];
+  };
+
+  const [colDefs, setColDefs] = useState<ColDef<CommpkgItem>[]>(
+    generateColDefs()
+  );
 
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CommpkgItem | null>(null);
@@ -16,43 +35,33 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
     setShow(true);
   };
 
+  useEffect(() => {
+    // Update colDefs dynamically if needed
+    setColDefs(generateColDefs());
+  }, [props.commissioningPackages]); // Dependency array to update colDefs when props change
+
   return (
-    <Stack>
-      <Card data-bs-theme="dark" className="custom-card">
-        <Card.Body>
-          <Card.Title>Count</Card.Title>
-          <Card.Text>{commpkgCount}</Card.Text>
-        </Card.Body>
-      </Card>
-
-      <div className="table-responsive">
-        <Table striped bordered hover responsive variant="dark">
-          <thead>
-            <tr>
-              <th style={{ width: "20%" }}>Commpkg</th>
-              <th style={{ width: "20%" }}>Facility</th>
-              <th style={{ width: "30%" }}>Safety Milestone</th>
-              <th style={{ width: "30%" }}>Phase</th>
-            </tr>
-          </thead>
-          <tbody>
-            {commpkgs.map((item, i) => (
-              <tr key={i} onClick={() => handleShow(item)}>
-                <td>{item.CommissioningPackageNo}</td>
-                <td>{item.Facility}</td>
-                <td>{item.Priority3}</td>
-                <td>{item.CommissioningPhase}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+    <div>
+      <div
+        className="ag-theme-quartz-dark" // applying the Data Grid theme
+        style={{ height: "90vh" }} // the Data Grid will fill the size of the parent container
+      >
+        <AgGridReact
+          rowData={commpkgs}
+          columnDefs={colDefs}
+          onRowClicked={(event) => {
+            const item = event.data as CommpkgItem | undefined;
+            if (item) {
+              handleShow(item);
+            }
+          }} // Handle row click
+        />
       </div>
-
       <CommpkgSideSheet
         show={show}
         handleClose={handleClose}
         selectedItem={selectedItem}
       />
-    </Stack>
+    </div>
   );
 };

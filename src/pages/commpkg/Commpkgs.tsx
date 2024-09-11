@@ -28,9 +28,11 @@ export const Commpkg: React.FC = () => {
       ) {
         items {
           CommissioningPackageNo,
-          Facility,
+          Priority1,
+          Priority2,
           Priority3,
-          CommissioningPhase
+          CommissioningPhase,
+          Facility
         }
       }
     }`;

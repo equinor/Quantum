@@ -1,17 +1,11 @@
 import React from "react";
 import { Offcanvas } from "react-bootstrap";
-
-interface CommissioningPackage {
-  CommissioningPackageNo: string;
-  Facility: string;
-  Priority3: string;
-  CommissioningPhase: string;
-}
+import { CommpkgItem } from "./CommpkgData";
 
 interface CommpkgSideSheetProps {
   show: boolean;
   handleClose: () => void;
-  selectedItem: CommissioningPackage | null;
+  selectedItem: CommpkgItem | null;
 }
 
 const CommpkgSideSheet: React.FC<CommpkgSideSheetProps> = ({
@@ -37,16 +31,22 @@ const CommpkgSideSheet: React.FC<CommpkgSideSheetProps> = ({
         {selectedItem && (
           <div>
             <p>
-              <strong>Commpkg:</strong> {selectedItem.CommissioningPackageNo}
+              <strong>Comm Pkg:</strong> {selectedItem.CommissioningPackageNo}
             </p>
             <p>
               <strong>Facility:</strong> {selectedItem.Facility}
             </p>
             <p>
-              <strong>Safety Milestone:</strong> {selectedItem.Priority3}
+              <strong>Comm Priority 1:</strong> {selectedItem.Priority1}
             </p>
             <p>
-              <strong>Phase:</strong> {selectedItem.CommissioningPhase}
+              <strong>Comm Priority 2:</strong> {selectedItem.Priority2}
+            </p>
+            <p>
+              <strong>Comm Priority 3:</strong> {selectedItem.Priority3}
+            </p>
+            <p>
+              <strong>Comm Phase:</strong> {selectedItem.CommissioningPhase}
             </p>
           </div>
         )}
