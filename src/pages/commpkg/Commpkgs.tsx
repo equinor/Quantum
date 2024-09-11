@@ -4,7 +4,7 @@ import "../../App.css";
 import { Button, Spinner, Form, InputGroup, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
-import CommpkgAnalytics from "./CommpkgAnalytics";
+import { CommpkgAnalytics } from "./CommpkgAnalytics";
 
 export const Commpkg: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
@@ -102,7 +102,6 @@ export const Commpkg: React.FC = () => {
             </Button>
           </div>
         </Stack>
-
         {commpkgData ? (
           view === "Table" ? (
             <>
@@ -112,12 +111,15 @@ export const Commpkg: React.FC = () => {
             </>
           ) : (
             <>
-              <CommpkgAnalytics commpkgData={commpkgData} />
+              <CommpkgAnalytics
+                commissioningPackages={commpkgData.commissioningPackages}
+              />
             </>
           )
         ) : (
           <h1>Get Data</h1>
         )}
+        y
       </div>
     </>
   );

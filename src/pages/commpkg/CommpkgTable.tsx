@@ -11,7 +11,13 @@ import { Card } from "react-bootstrap";
 export const CommpkgTable: React.FC<CommpkgData> = (props) => {
   const commpkgs = props.commissioningPackages.items;
   const [commpkgCount, setCommpkgCount] = useState(commpkgs.length);
-
+  const [show, setShow] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<CommpkgItem | null>(null);
+  const handleClose = () => setShow(false);
+  const handleShow = (item: CommpkgItem) => {
+    setSelectedItem(item);
+    setShow(true);
+  };
   const gridRef = useRef<AgGridReact>(null);
 
   const generateColDefs = (): ColDef<CommpkgItem>[] => {
@@ -31,15 +37,6 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
   const [colDefs, setColDefs] = useState<ColDef<CommpkgItem>[]>(
     generateColDefs()
   );
-
-  const [show, setShow] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<CommpkgItem | null>(null);
-
-  const handleClose = () => setShow(false);
-  const handleShow = (item: CommpkgItem) => {
-    setSelectedItem(item);
-    setShow(true);
-  };
 
   useEffect(() => {
     // Update colDefs dynamically if needed
@@ -62,7 +59,7 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
       </Card>
       <div
         className="ag-theme-quartz-dark" // applying the Data Grid theme
-        style={{ height: "84vh" }} // the Data Grid will fill the size of the parent container
+        style={{ height: "82vh" }} // the Data Grid will fill the size of the parent container
       >
         <AgGridReact
           ref={gridRef}
