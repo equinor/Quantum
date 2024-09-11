@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CommpkgTable } from "./CommpkgTable";
 import "../../App.css";
-import { Button, Spinner, Form, InputGroup } from "react-bootstrap";
+import { Button, Spinner, Form, InputGroup, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
 import CommpkgAnalytics from "./CommpkgAnalytics";
@@ -28,6 +28,10 @@ export const Commpkg: React.FC = () => {
       ) {
         items {
           CommissioningPackageNo,
+          Description,
+          Location,
+          Status,
+          Responsible,
           Priority1,
           Priority2,
           Priority3,
@@ -49,50 +53,56 @@ export const Commpkg: React.FC = () => {
   return (
     <>
       <div className="center-content">
-        <InputGroup className="input" size="sm" style={{ width: "300px" }}>
-          <InputGroup.Text id="inputGroup-sizing-sm" data-bs-theme="dark">
-            Set Facility
-          </InputGroup.Text>
-          <Form.Control
-            data-bs-theme="dark"
-            className="form-control"
-            aria-label="count"
-            aria-describedby="inputGroup-sizing-sm"
-            value={facility}
-            onChange={inputChange}
-          />
-        </InputGroup>
+        <Stack direction="horizontal" gap={3}>
+          <div className="p-2">
+            <InputGroup className="input" size="sm" style={{ width: "300px" }}>
+              <InputGroup.Text id="inputGroup-sizing-sm" data-bs-theme="dark">
+                Set Facility
+              </InputGroup.Text>
+              <Form.Control
+                data-bs-theme="dark"
+                className="form-control"
+                aria-label="count"
+                aria-describedby="inputGroup-sizing-sm"
+                value={facility}
+                onChange={inputChange}
+              />
+            </InputGroup>
+          </div>
+          <Button
+            variant="outline-light"
+            onClick={fetchCommpkgData}
+            disabled={display}
+          >
+            {display ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : (
+              "Get Commpkgs"
+            )}
+          </Button>
+          <div className="p-2"></div>
+          <div className="p-2 ms-auto">
+            <Button
+              variant={view === "Table" ? "light" : "outline-light"}
+              onClick={() => setView("Table")}
+            >
+              Table
+            </Button>
+            <Button
+              variant={view === "Table" ? "outline-light" : "light"}
+              onClick={() => setView("Analytics")}
+            >
+              Analytics
+            </Button>
+          </div>
+        </Stack>
 
-        <Button
-          variant="secondary"
-          onClick={fetchCommpkgData}
-          disabled={display}
-        >
-          {display ? (
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-          ) : (
-            "Get Commpkgs"
-          )}
-        </Button>
-        <Button
-          variant={view === "Table" ? "light" : "outline-light"}
-          onClick={() => setView("Table")}
-        >
-          Table
-        </Button>
-
-        <Button
-          variant={view === "Table" ? "outline-light" : "light"}
-          onClick={() => setView("Analytics")}
-        >
-          Analytics
-        </Button>
         {commpkgData ? (
           view === "Table" ? (
             <>

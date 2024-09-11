@@ -3,6 +3,10 @@ export interface CommpkgItem {
   Priority1: string;
   Priority2: string;
   Priority3: string;
+  Description: string;
+  Location: string;
+  Status: string;
+  Responsible: string;
   CommissioningPhase: string;
   Facility: string;
   commissioningPackageMilestone: commissioningPackageMilestone;
