@@ -48,6 +48,8 @@ body,
 }
 .custom-card {
   width: 300px;
+  font-size: 14px;
+  height: 50px;
 }
 .app {
   background-color: #323539;
@@ -71,4 +73,14 @@ body,
 
 .delete-btn {
   margin-left: 20px;
+}
+
+.dropdown-padding {
+  margin-right: 10px; /* Adjust the value as needed */
+}
+.dropdown-toggle:focus,
+.dropdown-toggle:active,
+.dropdown-toggle:focus-visible {
+  outline: none;
+  box-shadow: none;
 }

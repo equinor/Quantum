@@ -76,10 +76,20 @@ const TopBar: React.FC = () => {
             <Nav.Link as={Link} to="/Commpkg">
               Commpkg
             </Nav.Link>
-            <Nav.Link as={Link} to="/System">
-              Systems
-            </Nav.Link>
-            <Dropdown>
+            <Dropdown className="dropdown-padding">
+              <Dropdown.Toggle variant="outline-light" id="dropdown-systems">
+                Systems
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item as={Link} to="/System">
+                  Systems
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to="/SubSystem">
+                  Sub Systems
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown className="dropdown-padding">
               <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
                 Select Report
               </Dropdown.Toggle>

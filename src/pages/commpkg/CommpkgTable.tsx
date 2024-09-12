@@ -51,15 +51,31 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
 
   return (
     <div>
-      <Card data-bs-theme="dark" className="custom-card">
+      <Card
+        data-bs-theme="dark"
+        className="custom-card"
+        style={{
+          height: "50px",
+          width: "120px",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Card.Body>
-          <Card.Title>Count</Card.Title>
+          <Card.Title
+            style={{
+              fontSize: "14px",
+            }}
+          >
+            Total:
+          </Card.Title>
           <Card.Text>{commpkgCount}</Card.Text>
         </Card.Body>
       </Card>
+
       <div
         className="ag-theme-quartz-dark" // applying the Data Grid theme
-        style={{ height: "82vh" }} // the Data Grid will fill the size of the parent container
+        style={{ height: "80vh" }} // the Data Grid will fill the size of the parent container
       >
         <AgGridReact
           ref={gridRef}

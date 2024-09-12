@@ -119,7 +119,6 @@ export const Commpkg: React.FC = () => {
         ) : (
           <h1>Get Data</h1>
         )}
-        y
       </div>
     </>
   );
