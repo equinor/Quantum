@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Offcanvas, Form, Button } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
 import { SystemData, SystemItem } from "./SystemData";
 
-interface CommpkgSideSheetProps {
+interface SystemSideSheetProps {
   show: boolean;
   handleClose: () => void;
+  fetchSystemData: () => void; // Add the fetch function to the props
   selectedItem: SystemItem | null;
 }
 
-const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
+const CreateSystem: React.FC<SystemSideSheetProps> = ({
   show,
   handleClose,
+  fetchSystemData, // Destructure the fetch function
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
-  const [systemId, setSystemId] = useState<string>("sys-" + uuidv4());
+  const [systemId, setSystemId] = useState<string>("");
   const [systemNo, setSystemNo] = useState<string>("");
   const [systemDescription, setSystemDescription] = useState<string>("");
   const [systemOwner, setSystemOwner] = useState<string>("");
@@ -24,8 +26,12 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
     useState<string>("");
   const [operationResponsible, setOperationResponsible] = useState<string>("");
 
-  const handleSubmit = () => {
-    //event.preventDefault(); // Prevent form submission from reloading the page
+  useEffect(() => {
+    setSystemId("sys-" + uuidv4());
+  }, []);
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault(); // Prevent form submission from reloading the page
     const newSystemId = uuidv4();
     setSystemId("sys-" + newSystemId);
     console.log(newSystemId);
@@ -78,6 +84,9 @@ const CreateSystem: React.FC<CommpkgSideSheetProps> = ({
       setTechnicalIntegrityResponsible("");
       setOperationResponsible("");
       handleClose();
+      fetchSystemData(); // Fetch the updated system data
+    }).catch((error) => {
+      console.error("Error creating system:", error);
     });
   };
 

@@ -12,7 +12,7 @@ export const System: React.FC = () => {
   const [display, setDisplay] = useState<boolean>(false);
   const [showCreateSystem, setShowCreateSystem] = useState<boolean>(false);
 
-  const fetchCommpkgData = () => {
+  const fetchSystemData = () => {
     const query = `query GetSystem(){
       systems {
         items {
@@ -42,7 +42,7 @@ export const System: React.FC = () => {
       <div className="center-content">
         <Button
           variant="secondary"
-          onClick={fetchCommpkgData}
+          onClick={fetchSystemData}
           disabled={display}
         >
           {display ? (
@@ -69,6 +69,7 @@ export const System: React.FC = () => {
       <CreateSystem
         show={showCreateSystem}
         handleClose={handleCreateSystemClose}
+        fetchSystemData={fetchSystemData} // Pass the fetch function as a prop
         selectedItem={null}
       />
     </>

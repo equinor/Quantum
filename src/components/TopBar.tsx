@@ -77,8 +77,8 @@ const TopBar: React.FC = () => {
               Commpkg
             </Nav.Link>
             <Dropdown className="dropdown-padding">
-              <Dropdown.Toggle variant="outline-light" id="dropdown-systems">
-                Systems
+              <Dropdown.Toggle variant="outline-light" id="dropdown-search">
+                Search
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item as={Link} to="/System">
