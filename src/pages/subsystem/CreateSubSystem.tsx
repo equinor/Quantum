@@ -136,7 +136,7 @@ const CreateSubSystem: React.FC<CreateSubSystemProps> = ({
             )}
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                Select Sub System
+                Select System
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 {systemData?.systems.items.map((system) => (

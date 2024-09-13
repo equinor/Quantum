@@ -87,6 +87,9 @@ const TopBar: React.FC = () => {
                 <Dropdown.Item as={Link} to="/SubSystem">
                   Sub Systems
                 </Dropdown.Item>
+                <Dropdown.Item as={Link} to="/Tag">
+                  Tags
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
             <Dropdown className="dropdown-padding">
