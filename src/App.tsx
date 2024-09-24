@@ -8,6 +8,7 @@ import System from "./pages/system/System";
 import Report from "./pages/reports/Report";
 import SubSystem from "./pages/subsystem/SubSystem";
 import Tag from "./pages/tag/Tag";
+import Checklist from "./pages/checklist/Checklist";
 
 const App: React.FC = () => {
   return (
@@ -16,6 +17,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/Commpkg" Component={Commpkg} />
+        <Route path="/Checklist" Component={Checklist} />
         <Route path="/System" Component={System} />
         <Route path="/SubSystem" Component={SubSystem} />
         <Route path="/Tag" Component={Tag} />

@@ -14,13 +14,13 @@ interface System {
   OperationResponsible: string;
 }
 
-interface CommpkgSideSheetProps {
+interface SideSheetProps {
   show: boolean;
   handleClose: () => void;
   selectedItem: System | null;
 }
 
-const SystemSideSheet: React.FC<CommpkgSideSheetProps> = ({
+const SystemSideSheet: React.FC<SideSheetProps> = ({
   show,
   handleClose,
   selectedItem,
