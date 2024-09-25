@@ -6,11 +6,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { ChecklistItem, ChecklistData } from "./ChecklistData";
 import { ColDef } from "ag-grid-community";
 import CommpkgSideSheet from "./ChecklistSidesheet";
-import { Card } from "react-bootstrap";
+import { Card, Stack } from "react-bootstrap";
+import dayjs from "dayjs";
 
 export const CommpkgTable: React.FC<ChecklistData> = (props) => {
   const checklists = props.checklists.items;
   const [count, setCount] = useState(checklists.length);
+  const [unsignedCount, setUnsignedCount] = useState(
+    checklists.filter((item) => !item.SignedDate).length
+  );
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState<ChecklistItem | null>(null);
   const handleClose = () => setShow(false);
@@ -28,8 +32,18 @@ export const CommpkgTable: React.FC<ChecklistData> = (props) => {
       { field: "FormDiscipline", headerName: "FormDiscipline", filter: true },
       { field: "FormResponsible", headerName: "FormResponsible", filter: true },
       { field: "TagNo", headerName: "TagNo", filter: true },
-      { field: "HandoverPlan", headerName: "HandoverPlan", filter: true },
-      { field: "SignedDate", headerName: "Signed", filter: true },
+      {
+        field: "HandoverPlan",
+        headerName: "HandoverPlan",
+        filter: "agDateColumnFilter",
+        valueFormatter: (params) => dayjs(params.value).format("DD-MM-YYYY"),
+      },
+      {
+        field: "SignedDate",
+        headerName: "Signed",
+        filter: "agDateColumnFilter",
+        valueFormatter: (params) => dayjs(params.value).format("DD-MM-YYYY"),
+      },
       { field: "Facility", headerName: "Facility", filter: true },
       // Add more fields dynamically if needed
     ];
@@ -43,37 +57,69 @@ export const CommpkgTable: React.FC<ChecklistData> = (props) => {
     // Update colDefs dynamically if needed
     setColDefs(generateColDefs());
     setCount(checklists.length);
+    setUnsignedCount(checklists.filter((item) => !item.SignedDate).length);
   }, [props.checklists]); // Dependency array to update colDefs when props change
 
   const onFilterChanged = () => {
     if (gridRef.current) {
-      setCount(gridRef.current.api.getDisplayedRowCount());
+      const displayedRows: ChecklistItem[] = [];
+      gridRef.current.api.forEachNodeAfterFilterAndSort((node) => {
+        displayedRows.push(node.data);
+      });
+
+      setCount(displayedRows.length);
+      const unsignedRows = displayedRows.filter((item) => !item.SignedDate);
+      setUnsignedCount(unsignedRows.length);
     }
   };
 
   return (
     <div>
-      <Card
-        data-bs-theme="dark"
-        className="custom-card"
-        style={{
-          height: "50px",
-          width: "120px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Card.Body>
-          <Card.Title
-            style={{
-              fontSize: "14px",
-            }}
-          >
-            Total:
-          </Card.Title>
-          <Card.Text>{count}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Stack direction="horizontal">
+        <Card
+          data-bs-theme="dark"
+          className="custom-card"
+          style={{
+            height: "50px",
+            width: "120px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Card.Body>
+            <Card.Title
+              style={{
+                fontSize: "14px",
+              }}
+            >
+              Total
+            </Card.Title>
+            <Card.Text>{count.toLocaleString()}</Card.Text>
+          </Card.Body>
+        </Card>
+
+        <Card
+          data-bs-theme="dark"
+          className="custom-card"
+          style={{
+            height: "50px",
+            width: "120px",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Card.Body>
+            <Card.Title
+              style={{
+                fontSize: "14px",
+              }}
+            >
+              OS
+            </Card.Title>
+            <Card.Text>{unsignedCount.toLocaleString()}</Card.Text>
+          </Card.Body>
+        </Card>
+      </Stack>
 
       <div
         className="ag-theme-quartz-dark" // applying the Data Grid theme
