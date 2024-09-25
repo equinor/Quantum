@@ -6,6 +6,7 @@ import { useIsAuthenticated } from "@azure/msal-react";
 import { Link, useNavigate } from "react-router-dom";
 import "../App.css";
 import { getAccessToken } from "../GetAccessToken";
+import FusionIcon from "../../public/Fusion.svg";
 
 type ReportData = {
   name: string;
@@ -67,37 +68,38 @@ const TopBar: React.FC = () => {
   return (
     <Navbar bg="dark" data-bs-theme="dark" className="navbarStyle">
       <Navbar.Brand className="brand" as={Link} to="/">
+        <img src={FusionIcon} alt="Fusion Icon" className="fusion-icon" />{" "}
         Quantum
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         {isAuthenticated ? (
           <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/Commpkg">
-              Commpkg
-            </Nav.Link>
-            <Nav.Link as={Link} to="/Checklist">
-              Checklist
-            </Nav.Link>
             <Dropdown className="dropdown-padding">
               <Dropdown.Toggle variant="outline-light" id="dropdown-search">
                 Search
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item as={Link} to="/System">
-                  Systems
+                  System
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to="/SubSystem">
-                  Sub Systems
+                  Sub System
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to="/Commpkg">
+                  Commpkg
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to="/Tag">
-                  Tags
+                  Tag
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to="/Checklist">
+                  Checklist
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
             <Dropdown className="dropdown-padding">
               <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
-                Select Report
+                Report
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
