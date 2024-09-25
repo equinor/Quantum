@@ -1,21 +1,51 @@
+import { ChecklistData } from "./ChecklistData";
 import React, { useState, useEffect } from "react";
 import { AgCharts } from "ag-charts-react";
-import { ChecklistData } from "./ChecklistData";
 import { AgChartOptions } from "ag-charts-community";
+import { getISOWeek, getYear } from "date-fns";
 
 export const Analytics: React.FC<ChecklistData> = (props) => {
-  const commpkgs = props.checklists?.items || [];
+  const checklist = props.checklists?.items || [];
 
-  // Transform the data to count occurrences of each Priority1 value
-  const transformedData = commpkgs.reduce((acc, pkg) => {
-    const found = acc.find((item) => item.Priority1 === pkg.FormResponsible);
-    if (found) {
-      found.count += 1;
+  // Filter the checklist items to only include those from 2024 or later
+  const filteredChecklist = checklist.filter(
+    (item) =>
+      getYear(new Date(item.SignedDate)) >= 2024 ||
+      getYear(new Date(item.HandoverPlan)) >= 2024
+  );
+
+  // Transform the data to count occurrences of each SignedDate and HandoverPlan value
+  const transformedData = filteredChecklist.reduce((acc, pkg) => {
+    const signedWeekYear = `${getISOWeek(new Date(pkg.SignedDate))}-${getYear(
+      new Date(pkg.SignedDate)
+    )}`;
+    const handoverWeekYear = `${getISOWeek(
+      new Date(pkg.HandoverPlan)
+    )}-${getYear(new Date(pkg.HandoverPlan))}`;
+
+    const signedFound = acc.find((item) => item.Signed === signedWeekYear);
+    if (signedFound) {
+      signedFound.signedCount += 1;
     } else {
-      acc.push({ Priority1: pkg.FormResponsible, count: 1 });
+      acc.push({ Signed: signedWeekYear, signedCount: 1, handoverCount: 0 });
     }
+
+    const handoverFound = acc.find((item) => item.Signed === handoverWeekYear);
+    if (handoverFound) {
+      handoverFound.handoverCount += 1;
+    } else {
+      acc.push({ Signed: handoverWeekYear, signedCount: 0, handoverCount: 1 });
+    }
+
     return acc;
-  }, [] as { Priority1: string; count: number }[]);
+  }, [] as { Signed: string; signedCount: number; handoverCount: number }[]);
+
+  // Sort the transformed data by week-year
+  transformedData.sort((a, b) => {
+    const [weekA, yearA] = a.Signed.split("-").map(Number);
+    const [weekB, yearB] = b.Signed.split("-").map(Number);
+    return yearA - yearB || weekA - weekB;
+  });
 
   const [chartOptions, setChartOptions] = useState<AgChartOptions>({
     theme: {
@@ -25,9 +55,26 @@ export const Analytics: React.FC<ChecklistData> = (props) => {
     series: [
       {
         type: "bar",
-        xKey: "Priority1",
-        yKey: "count",
-        yName: "Count",
+        xKey: "Signed",
+        yKey: "signedCount",
+        yName: "Signed Count",
+        label: {
+          enabled: true,
+          formatter: (params) => {
+            // Format labels as ### ###
+            return params.value
+              .toString()
+              .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+          },
+          color: "#FFFFFF",
+          placement: "outside",
+        },
+      },
+      {
+        type: "bar",
+        xKey: "Signed",
+        yKey: "handoverCount",
+        yName: "Handover Count",
         label: {
           enabled: true,
           formatter: (params) => {
@@ -44,21 +91,55 @@ export const Analytics: React.FC<ChecklistData> = (props) => {
   });
 
   useEffect(() => {
-    const newTransformedData = commpkgs.reduce((acc, pkg) => {
-      const found = acc.find((item) => item.Priority1 === pkg.FormResponsible);
-      if (found) {
-        found.count += 1;
+    const newFilteredChecklist = checklist.filter(
+      (item) =>
+        getYear(new Date(item.SignedDate)) >= 2024 ||
+        getYear(new Date(item.HandoverPlan)) >= 2024
+    );
+
+    const newTransformedData = newFilteredChecklist.reduce((acc, pkg) => {
+      const signedWeekYear = `${getISOWeek(new Date(pkg.SignedDate))}-${getYear(
+        new Date(pkg.SignedDate)
+      )}`;
+      const handoverWeekYear = `${getISOWeek(
+        new Date(pkg.HandoverPlan)
+      )}-${getYear(new Date(pkg.HandoverPlan))}`;
+
+      const signedFound = acc.find((item) => item.Signed === signedWeekYear);
+      if (signedFound) {
+        signedFound.signedCount += 1;
       } else {
-        acc.push({ Priority1: pkg.FormResponsible, count: 1 });
+        acc.push({ Signed: signedWeekYear, signedCount: 1, handoverCount: 0 });
       }
+
+      const handoverFound = acc.find(
+        (item) => item.Signed === handoverWeekYear
+      );
+      if (handoverFound) {
+        handoverFound.handoverCount += 1;
+      } else {
+        acc.push({
+          Signed: handoverWeekYear,
+          signedCount: 0,
+          handoverCount: 1,
+        });
+      }
+
       return acc;
-    }, [] as { Priority1: string; count: number }[]);
+    }, [] as { Signed: string; signedCount: number; handoverCount: number }[]);
+
+    // Sort the new transformed data by week-year
+    newTransformedData.sort((a, b) => {
+      const [weekA, yearA] = a.Signed.split("-").map(Number);
+      const [weekB, yearB] = b.Signed.split("-").map(Number);
+      return yearA - yearB || weekA - weekB;
+    });
 
     setChartOptions((prevOptions) => ({
       ...prevOptions,
       data: newTransformedData,
     }));
-  }, [commpkgs]);
+  }, [checklist]);
 
   return (
     <div className="ag-theme-quartz-dark" style={{ height: "80vh" }}>
