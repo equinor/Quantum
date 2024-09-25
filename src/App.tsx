@@ -3,7 +3,7 @@ import TopBar from "./components/TopBar";
 import Home from "./pages/Home";
 import { Route, Routes } from "react-router-dom";
 
-import { Commpkg } from "./pages/commpkg/Commpkgs";
+import { Commpkg } from "./pages/commpkg/Commpkg";
 import System from "./pages/system/System";
 import Report from "./pages/reports/Report";
 import SubSystem from "./pages/subsystem/SubSystem";

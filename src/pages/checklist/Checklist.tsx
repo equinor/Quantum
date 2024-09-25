@@ -18,7 +18,7 @@ export const Checklist: React.FC = () => {
 
   const fetchData = () => {
     const query = `query getData($facility: String!){
-  checklists(first: 100000
+  checklists(first: 20000
   filter:  {
      Facility:  {
         eq: $facility

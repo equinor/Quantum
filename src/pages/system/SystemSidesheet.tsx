@@ -42,6 +42,7 @@ const SystemSideSheet: React.FC<SideSheetProps> = ({
       setSystemNo(selectedItem.SystemNo);
       setSystemDescription(selectedItem.SystemDescription);
       setSystemOwner(selectedItem.SystemOwner);
+      setcommissioningLead(selectedItem.CommissioningLead);
       setTechnicalIntegrityResponsible(
         selectedItem.TechnicalIntegrityResponsible
       );

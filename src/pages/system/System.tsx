@@ -8,7 +8,7 @@ import CreateSystem from "./CreateSystem";
 
 export const System: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
-  const [SystemData, setSystemData] = useState<SystemData | null>(null);
+  const [system, setSystem] = useState<SystemData | null>(null);
   const [display, setDisplay] = useState<boolean>(false);
   const [showCreateSystem, setShowCreateSystem] = useState<boolean>(false);
 
@@ -29,7 +29,7 @@ export const System: React.FC = () => {
 
     setDisplay(true);
     RequestGraphQL<SystemData>(query, {}, (data: SystemData) => {
-      setSystemData(data);
+      setSystem(data);
       setDisplay(false);
     });
   };
@@ -60,8 +60,8 @@ export const System: React.FC = () => {
         <Button variant="secondary" onClick={handleCreateSystemShow}>
           Create System
         </Button>
-        {SystemData ? (
-          <SystemTable systems={SystemData.systems} />
+        {system ? (
+          <SystemTable systems={system.systems} />
         ) : (
           <h1>No Data to display</h1>
         )}
