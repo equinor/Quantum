@@ -16,13 +16,8 @@ const Home: React.FC = () => {
           <br />
           <br />
           <center>
-            <h1> Go to Commpkg to test getting data from external source</h1>
+            <h1> Welcome</h1>
             <br />
-            <h1>
-              {" "}
-              Go to System to test creating, modifying and deleting items in
-              Fabric
-            </h1>
           </center>
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>

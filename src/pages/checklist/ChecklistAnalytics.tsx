@@ -1,4 +1,5 @@
 import { ChecklistData } from "./ChecklistData";
+
 import React, { useState, useEffect } from "react";
 import { AgCharts } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-community";
@@ -7,15 +8,8 @@ import { getISOWeek, getYear } from "date-fns";
 export const Analytics: React.FC<ChecklistData> = (props) => {
   const checklist = props.checklists?.items || [];
 
-  // Filter the checklist items to only include those from 2024 or later
-  const filteredChecklist = checklist.filter(
-    (item) =>
-      getYear(new Date(item.SignedDate)) >= 2024 ||
-      getYear(new Date(item.HandoverPlan)) >= 2024
-  );
-
   // Transform the data to count occurrences of each SignedDate and HandoverPlan value
-  const transformedData = filteredChecklist.reduce((acc, pkg) => {
+  const transformedData = checklist.reduce((acc, pkg) => {
     const signedWeekYear = `${getISOWeek(new Date(pkg.SignedDate))}-${getYear(
       new Date(pkg.SignedDate)
     )}`;
@@ -91,13 +85,7 @@ export const Analytics: React.FC<ChecklistData> = (props) => {
   });
 
   useEffect(() => {
-    const newFilteredChecklist = checklist.filter(
-      (item) =>
-        getYear(new Date(item.SignedDate)) >= 2024 ||
-        getYear(new Date(item.HandoverPlan)) >= 2024
-    );
-
-    const newTransformedData = newFilteredChecklist.reduce((acc, pkg) => {
+    const newTransformedData = checklist.reduce((acc, pkg) => {
       const signedWeekYear = `${getISOWeek(new Date(pkg.SignedDate))}-${getYear(
         new Date(pkg.SignedDate)
       )}`;

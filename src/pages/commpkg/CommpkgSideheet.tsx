@@ -31,22 +31,22 @@ const CommpkgSideSheet: React.FC<CommpkgSideSheetProps> = ({
         {selectedItem && (
           <div>
             <p>
-              <strong>Comm Pkg:</strong> {selectedItem.CommissioningPackageNo}
+              <strong>Comm Pkg:</strong> {selectedItem.CommpkgNo}
             </p>
             <p>
-              <strong>Facility:</strong> {selectedItem.Facility}
+              <strong>Description:</strong> {selectedItem.Description}
             </p>
             <p>
-              <strong>Comm Priority 1:</strong> {selectedItem.Priority1}
+              <strong>ProjectMilestone:</strong> {selectedItem.ProjectMilestone}
             </p>
             <p>
-              <strong>Comm Priority 2:</strong> {selectedItem.Priority2}
+              <strong>SafetyMilestone:</strong> {selectedItem.SafetyMilestone}
             </p>
             <p>
-              <strong>Comm Priority 3:</strong> {selectedItem.Priority3}
+              <strong>SubSystemNo:</strong> {selectedItem.SubSystemNo}
             </p>
             <p>
-              <strong>Comm Phase:</strong> {selectedItem.CommissioningPhase}
+              <strong>Comment:</strong> {selectedItem.Comment}
             </p>
           </div>
         )}

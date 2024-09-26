@@ -1,25 +1,24 @@
 export interface CommpkgItem {
-  CommissioningPackageNo: string;
-  Priority1: string;
-  Priority2: string;
-  Priority3: string;
-  Description: string;
-  Location: string;
-  Status: string;
+  CommpkgId: string;
+  CommpkgNo: string;
+  ProjectMilestone: string;
+  Comment: string;
+  HandoverStatus: string;
+  PlannedStart: Date;
+  PlannedEnd: Date;
+  ActualStart: Date;
+  ActualEnd: Date;
   Responsible: string;
-  CommissioningPhase: string;
-  Facility: string;
-  commissioningPackageMilestone: commissioningPackageMilestone;
-}
-
-export interface commissioningPackageMilestone {
-  items: commissioningPackageMilestoneItem[];
-}
-
-export interface commissioningPackageMilestoneItem {
-  ForecastDate: Date;
-  PlannedDate: Date;
-  ActualDate: Date;
+  Progress: string;
+  Estimate: string;
+  Description: string;
+  SubSystemNo: string;
+  SubSystemId: string;
+  Identifier: string;
+  Phase: string;
+  CommStatus: string;
+  MCStatus: string;
+  SafetyMilestone: string;
 }
 export interface CommpkgConnection {
   items: CommpkgItem[];
@@ -28,5 +27,5 @@ export interface CommpkgConnection {
 }
 
 export interface CommpkgData {
-  commissioningPackages: CommpkgConnection;
+  commpkgs: CommpkgConnection;
 }

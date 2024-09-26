@@ -6,6 +6,7 @@ import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
 import { CommpkgAnalytics } from "./CommpkgAnalytics";
 import { Facility as FacilityEnum } from "../../library/Facility";
+import CreateCommpkg from "./CreateCommpkg";
 
 export const Commpkg: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
@@ -13,31 +14,37 @@ export const Commpkg: React.FC = () => {
   const [display, setDisplay] = useState<boolean>(false);
   const [facility, setFacility] = useState<FacilityEnum | "">(""); // Default to empty string
   const [view, setView] = useState<string>("Table");
+  const [showCreate, setShowCreate] = useState<boolean>(false);
 
   const fetchCommpkgData = () => {
-    const query = `query getCommpkg($facility: String!) {
-      commissioningPackages(
-      first: 2000
-        filter: { Facility: { eq: $facility } Priority3:  {
-           isNull: false
-        } }
-      ) {
-        items {
-          CommissioningPackageNo,
-          Description,
-          Location,
-          Status,
-          Responsible,
-          Priority1,
-          Priority2,
-          Priority3,
-          CommissioningPhase,
-          Facility
-        }
-      }
-    }`;
+    const query = `query getData(){
+  commpkgs() {
+     items {
+        CommpkgId
+        CommpkgNo
+        PlannedEnd
+        ProjectMilestone
+        Comment
+        HandoverStatus
+        PlannedStart
+        ActualStart
+        ActualEnd
+        Responsible
+        Progress
+        Estimate
+        Description
+        SubSystemNo
+        SubSystemId
+        Identifier
+        Phase
+        CommStatus
+        MCStatus
+        SafetyMilestone
+     }
+  }
+}`;
 
-    const variables = { facility };
+    const variables = {};
 
     setDisplay(true);
     RequestGraphQL<CommpkgData>(query, variables, (data: CommpkgData) => {
@@ -45,6 +52,9 @@ export const Commpkg: React.FC = () => {
       setDisplay(false);
     });
   };
+
+  const handleCreateShow = () => setShowCreate(true);
+  const handleCreateClose = () => setShowCreate(false);
 
   return (
     <>
@@ -83,6 +93,9 @@ export const Commpkg: React.FC = () => {
               "Get Commpkgs"
             )}
           </Button>
+          <Button variant="secondary" onClick={handleCreateShow}>
+            Create Commpkg
+          </Button>
           <div className="p-2"></div>
           <div className="p-2 ms-auto">
             <Button
@@ -102,21 +115,22 @@ export const Commpkg: React.FC = () => {
         {commpkgData ? (
           view === "Table" ? (
             <>
-              <CommpkgTable
-                commissioningPackages={commpkgData.commissioningPackages}
-              />
+              <CommpkgTable commpkgs={commpkgData.commpkgs} />
             </>
           ) : (
             <>
-              <CommpkgAnalytics
-                commissioningPackages={commpkgData.commissioningPackages}
-              />
+              <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
             </>
           )
         ) : (
           <h1>Get Data</h1>
         )}
       </div>
+      <CreateCommpkg
+        show={showCreate}
+        handleClose={handleCreateClose}
+        selectedItem={null}
+      />
     </>
   );
 };

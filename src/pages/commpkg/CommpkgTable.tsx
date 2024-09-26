@@ -9,7 +9,7 @@ import CommpkgSideSheet from "./CommpkgSideheet";
 import { Card } from "react-bootstrap";
 
 export const CommpkgTable: React.FC<CommpkgData> = (props) => {
-  const commpkgs = props.commissioningPackages.items;
+  const commpkgs = props.commpkgs.items;
   const [commpkgCount, setCommpkgCount] = useState(commpkgs.length);
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CommpkgItem | null>(null);
@@ -22,15 +22,30 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
 
   const generateColDefs = (): ColDef<CommpkgItem>[] => {
     return [
-      { field: "CommissioningPackageNo", headerName: "Comm Pkg", filter: true },
+      { field: "CommpkgNo", headerName: "Comm Pkg", filter: true },
+      { field: "CommpkgId", headerName: "CommpkgId", filter: true },
       { field: "Description", headerName: "Description", filter: true },
-      { field: "Status", headerName: "Status", filter: true },
-      { field: "Priority1", headerName: "Comm Priority 1", filter: true },
-      { field: "Priority2", headerName: "Comm Priority 2", filter: true },
-      { field: "Priority3", headerName: "Comm Priority 3", filter: true },
-      { field: "CommissioningPhase", headerName: "Comm Phase", filter: true },
-      { field: "Facility", headerName: "Facility", filter: true },
-      // Add more fields dynamically if needed
+      {
+        field: "ProjectMilestone",
+        headerName: "ProjectMilestone",
+        filter: true,
+      },
+      { field: "SafetyMilestone", headerName: "SafetyMilestone", filter: true },
+      { field: "SubSystemNo", headerName: "SubSystemNo", filter: true },
+      { field: "Phase", headerName: "Phase", filter: true },
+      { field: "Responsible", headerName: "Responsible", filter: true },
+      { field: "Identifier", headerName: "Identifier", filter: true },
+      { field: "Comment", headerName: "Comment", filter: true },
+      { field: "PlannedStart", headerName: "PlannedStart", filter: true },
+      { field: "PlannedEnd", headerName: "PlannedEnd", filter: true },
+      { field: "ActualStart", headerName: "ActualStart", filter: true },
+      { field: "ActualEnd", headerName: "ActualEnd", filter: true },
+      { field: "ActualStart", headerName: "ActualStart", filter: true },
+      { field: "Progress", headerName: "Progress", filter: true },
+      { field: "Estimate", headerName: "Estimate", filter: true },
+      { field: "HandoverStatus", headerName: "HandoverStatus", filter: true },
+      { field: "CommStatus", headerName: "CommStatus", filter: true },
+      { field: "MCStatus", headerName: "MCStatus", filter: true },
     ];
   };
 
@@ -41,7 +56,7 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
   useEffect(() => {
     // Update colDefs dynamically if needed
     setColDefs(generateColDefs());
-  }, [props.commissioningPackages]); // Dependency array to update colDefs when props change
+  }, [props.commpkgs]); // Dependency array to update colDefs when props change
 
   const onFilterChanged = () => {
     if (gridRef.current) {
