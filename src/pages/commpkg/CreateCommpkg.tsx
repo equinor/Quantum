@@ -4,6 +4,7 @@ import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
 import { CommpkgData, CommpkgItem } from "./CommpkgData";
 import { SubSystemData } from "../subsystem/SubSystemData";
+import { ProjectMilestone, SafetyMilestone } from "../../library/Milestone";
 
 interface CreateSubSystemProps {
   show: boolean;
@@ -17,7 +18,6 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
 
-  //const [commpkgId, setCommpkgId] = useState<string>("comm-");
   const [formData, setFormData] = useState({
     commpkgId: "comm-" + uuidv4(),
     commpkgNo: "",
@@ -48,7 +48,6 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       console.log("Show:true");
     } else {
       console.log("Show:false");
-      // resetFormFields();
     }
   }, [show]);
 
@@ -66,6 +65,9 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
         $commpkgNo: String!,
         $subSystemId: String!,
         $subSystemNo: String!,
+        $description: String!,
+        $projectMilestone: String!,
+        $safetyMilestone: String!,
       ) {
         createCommpkg(
           item: {
@@ -73,6 +75,9 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             CommpkgNo: $commpkgNo
             SubSystemId: $subSystemId
             SubSystemNo: $subSystemNo
+            Description: $description
+            ProjectMilestone: $projectMilestone
+            SafetyMilestone: $safetyMilestone
           }
         ) {
           result
@@ -84,22 +89,22 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       commpkgNo: formData.commpkgNo,
       subSystemId: formData.subSystemId,
       subSystemNo: formData.subSystemNo,
-      // projectMilestone: formData.projectMilestone,
-      // comment: formData.comment,
-      // handoverStatus: formData.handoverStatus,
-      // plannedStart: formData.plannedStart,
-      // plannedEnd: formData.plannedEnd,
-      // actualEnd: formData.actualEnd,
-      // actualStart: formData.actualStart,
-      // responsible: formData.responsible,
-      // progress: formData.progress,
-      // estimate: formData.estimate,
-      // description: formData.description,
-      // identifier: formData.identifier,
-      // phase: formData.phase,
-      // commStatus: formData.commStatus,
-      // mCStatus: formData.mCStatus,
-      // safetyMilestone: formData.safetyMilestone,
+      description: formData.description,
+      projectMilestone: formData.projectMilestone,
+      comment: formData.comment,
+      handoverStatus: formData.handoverStatus,
+      plannedStart: formData.plannedStart,
+      plannedEnd: formData.plannedEnd,
+      actualEnd: formData.actualEnd,
+      actualStart: formData.actualStart,
+      responsible: formData.responsible,
+      progress: formData.progress,
+      estimate: formData.estimate,
+      identifier: formData.identifier,
+      phase: formData.phase,
+      commStatus: formData.commStatus,
+      mCStatus: formData.mCStatus,
+      safetyMilestone: formData.safetyMilestone,
     };
     RequestGraphQL<CommpkgData>(mutation, input, (data: CommpkgData) => {
       console.log("Commpkg created:", data);
@@ -126,9 +131,8 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
   };
 
   const resetFormFields = () => {
-    //setCommpkgId("");
     setFormData({
-      commpkgId: "comm-",
+      commpkgId: "comm-" + uuidv4(),
       commpkgNo: "",
       subSystemId: "",
       subSystemNo: "",
@@ -189,6 +193,43 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             />
           </Form.Group>
           <br />
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              {formData.safetyMilestone || "Safety Milestone"}{" "}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {Object.values(SafetyMilestone).map((safetyMilestone) => (
+                <Dropdown.Item
+                  key={safetyMilestone}
+                  onClick={() => setFormData({ ...formData, safetyMilestone })}
+                >
+                  {safetyMilestone}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+          <br />
+          <Dropdown>
+            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+              {formData.projectMilestone || "Project Milestone"}{" "}
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              {Object.values(ProjectMilestone).map((projectMilestone) => (
+                <Dropdown.Item
+                  key={projectMilestone}
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      projectMilestone: projectMilestone,
+                    })
+                  }
+                >
+                  {projectMilestone}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+          <br />
           <Stack direction="horizontal" gap={0}>
             {formData.subSystemNo && (
               <Form.Group controlId="formSelectedSystem">
@@ -201,7 +242,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             )}
             <Dropdown>
               <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                Select System
+                Select Sub System
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 {subSystem?.subSystems.items.map((subsystem) => (
@@ -221,6 +262,10 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
               </Dropdown.Menu>
             </Dropdown>
           </Stack>
+          <br />
+          <br />
+          <br />
+          <br />
           <br />
           <Button variant="secondary" type="submit">
             Create Commpkg
