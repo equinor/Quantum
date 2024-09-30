@@ -13,8 +13,12 @@ export interface TagItem {
   Discipline: string;
 }
 
+export interface TagConnection {
+  items: TagItem[];
+  endCursor: string | null;
+  hasNextPage: boolean;
+}
+
 export interface TagData {
-  tags: {
-    items: TagItem[];
-  };
+  tags: TagConnection;
 }

@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { CommpkgTable } from "./CommpkgTable";
 import "../../App.css";
-import { Button, Spinner, Stack, Dropdown } from "react-bootstrap";
+import { Button, Spinner, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
 import { CommpkgAnalytics } from "./CommpkgAnalytics";
-import { Facility as FacilityEnum } from "../../library/Facility";
+
 import CreateCommpkg from "./CreateCommpkg";
 
 export const Commpkg: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
   const [commpkgData, setCommpkgData] = useState<CommpkgData | null>(null);
   const [display, setDisplay] = useState<boolean>(false);
-  const [facility, setFacility] = useState<FacilityEnum | "">(""); // Default to empty string
   const [view, setView] = useState<string>("Table");
   const [showCreate, setShowCreate] = useState<boolean>(false);
 
@@ -60,22 +59,6 @@ export const Commpkg: React.FC = () => {
     <>
       <div className="center-content">
         <Stack direction="horizontal" gap={3}>
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              {facility || "Select Facility"}{" "}
-              {/* Display the selected facility or hint */}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {Object.values(FacilityEnum).map((facility) => (
-                <Dropdown.Item
-                  key={facility}
-                  onClick={() => setFacility(facility)}
-                >
-                  {facility}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
           <Button
             variant="outline-light"
             onClick={fetchCommpkgData}

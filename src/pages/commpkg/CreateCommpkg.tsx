@@ -26,13 +26,13 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
     projectMilestone: "",
     comment: "",
     handoverStatus: "",
-    plannedStart: "",
-    plannedEnd: "",
-    actualEnd: "",
-    actualStart: "",
+    plannedStart: new Date(),
+    plannedEnd: new Date(),
+    actualEnd: new Date(),
+    actualStart: new Date(),
     responsible: "",
-    progress: "",
-    estimate: "",
+    progress: 0,
+    estimate: 0,
     description: "",
     identifier: "",
     phase: "",
@@ -68,6 +68,10 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
         $description: String!,
         $projectMilestone: String!,
         $safetyMilestone: String!,
+        $comment: String!,
+        $progress: Int!
+        $estimate: Decimal!
+        $plannedStart: DateTime!
       ) {
         createCommpkg(
           item: {
@@ -78,6 +82,10 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             Description: $description
             ProjectMilestone: $projectMilestone
             SafetyMilestone: $safetyMilestone
+            Comment:  $comment
+            Progress: $progress
+            Estimate: $estimate
+            PlannedStart: $plannedStart
           }
         ) {
           result
@@ -139,13 +147,13 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       projectMilestone: "",
       comment: "",
       handoverStatus: "",
-      plannedStart: "",
-      plannedEnd: "",
-      actualEnd: "",
-      actualStart: "",
+      plannedStart: new Date(),
+      plannedEnd: new Date(),
+      actualEnd: new Date(),
+      actualStart: new Date(),
       responsible: "",
-      progress: "",
-      estimate: "",
+      progress: 0,
+      estimate: 0,
       description: "",
       identifier: "",
       phase: "",
@@ -262,6 +270,67 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
               </Dropdown.Menu>
             </Dropdown>
           </Stack>
+          <br />
+          <Form.Group controlId="formComment">
+            <Form.Label>Comment</Form.Label>
+            <Form.Control
+              type="text"
+              value={formData.comment}
+              onChange={(e) =>
+                setFormData({ ...formData, comment: e.target.value })
+              }
+            />
+          </Form.Group>
+          <br />
+          <Form.Group controlId="formProgress">
+            <Form.Label>Progress</Form.Label>
+            <Form.Control
+              type="text"
+              value={formData.progress}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  progress: parseInt(e.target.value, 10) || 0,
+                })
+              }
+            />
+          </Form.Group>
+          <br />
+          <Form.Group controlId="formEstimate">
+            <Form.Label>Estimate</Form.Label>
+            <Form.Control
+              type="text"
+              value={formData.estimate}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  estimate: parseFloat(e.target.value) || 0,
+                })
+              }
+            />
+          </Form.Group>
+          <Form.Group controlId="formProgress">
+            <Form.Label>Planned Start</Form.Label>
+            <Form.Control
+              type="date"
+              value={formData.plannedStart
+                .toLocaleDateString("no-NO", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })
+                .split(".")
+                .reverse()
+                .join("-")} // Convert Date to Norwegian format and then to string
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  plannedStart: new Date(e.target.value), // Convert string back to Date
+                })
+              }
+            />
+          </Form.Group>
+
           <br />
           <br />
           <br />

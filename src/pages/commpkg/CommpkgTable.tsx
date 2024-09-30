@@ -23,7 +23,7 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
   const generateColDefs = (): ColDef<CommpkgItem>[] => {
     return [
       { field: "CommpkgNo", headerName: "Comm Pkg", filter: true },
-      { field: "CommpkgId", headerName: "CommpkgId", filter: true },
+      //{ field: "CommpkgId", headerName: "CommpkgId", filter: true },
       { field: "Description", headerName: "Description", filter: true },
       {
         field: "ProjectMilestone",

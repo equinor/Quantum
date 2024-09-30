@@ -9,8 +9,8 @@ export interface CommpkgItem {
   ActualStart: Date;
   ActualEnd: Date;
   Responsible: string;
-  Progress: string;
-  Estimate: string;
+  Progress: number;
+  Estimate: number;
   Description: string;
   SubSystemNo: string;
   SubSystemId: string;
