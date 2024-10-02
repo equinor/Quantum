@@ -21,6 +21,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
   const [formData, setFormData] = useState({
     commpkgId: "comm-" + uuidv4(),
     commpkgNo: "",
+    description: "",
     subSystemId: "",
     subSystemNo: "",
     projectMilestone: "",
@@ -33,7 +34,6 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
     responsible: "",
     progress: 0,
     estimate: 0,
-    description: "",
     identifier: "",
     phase: "",
     commStatus: "",
@@ -72,6 +72,9 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
         $progress: Int!
         $estimate: Decimal!
         $plannedStart: DateTime!
+        $plannedEnd: DateTime!
+        $actualStart: DateTime!
+        $actualEnd: DateTime!
       ) {
         createCommpkg(
           item: {
@@ -86,6 +89,9 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             Progress: $progress
             Estimate: $estimate
             PlannedStart: $plannedStart
+            PlannedEnd: $plannedEnd
+            ActualStart: $actualStart
+            ActualEnd: $actualEnd
           }
         ) {
           result
