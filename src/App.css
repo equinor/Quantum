@@ -60,6 +60,8 @@ body,
 
 .sidesheet {
   width: 800px;
+  color: black;
+  background-color: white;
 }
 
 .custom-close-button .btn-close {

@@ -6,8 +6,8 @@ export interface CommpkgItem {
   HandoverStatus: string;
   PlannedStart: Date;
   PlannedEnd: Date;
-  ActualStart: Date;
-  ActualEnd: Date;
+  ActualStart: Date | null;
+  ActualEnd: Date | null;
   Responsible: string;
   Progress: number;
   Estimate: number;
