@@ -16,52 +16,52 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
   selectedItem,
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
-  const [formData, setFormData] = useState({
-    commpkgId: "",
-    commpkgNo: "",
-    subSystemId: "",
-    subSystemNo: "",
-    projectMilestone: "",
-    comment: "",
-    handoverStatus: "",
-    plannedStart: new Date(),
-    plannedEnd: new Date(),
-    actualEnd: new Date(),
-    actualStart: new Date(),
-    responsible: "",
-    progress: 0,
-    estimate: 0,
-    description: "",
-    identifier: "",
-    phase: "",
-    commStatus: "",
-    mCStatus: "",
-    safetyMilestone: "",
+  const [formData, setFormData] = useState<CommpkgItem>({
+    CommpkgId: "",
+    CommpkgNo: "",
+    Description: "",
+    SubSystemId: "",
+    SubSystemNo: "",
+    ProjectMilestone: "",
+    Comment: "",
+    HandoverStatus: "",
+    PlannedStart: new Date(),
+    PlannedEnd: new Date(),
+    ActualEnd: new Date(),
+    ActualStart: new Date(),
+    Responsible: "",
+    Progress: 0,
+    Estimate: 0,
+    Identifier: "",
+    Phase: "",
+    CommStatus: "",
+    MCStatus: "",
+    SafetyMilestone: "",
   });
 
   useEffect(() => {
     if (selectedItem) {
       setFormData({
-        commpkgId: selectedItem?.CommpkgId,
-        commpkgNo: selectedItem?.CommpkgNo,
-        subSystemId: selectedItem?.SubSystemId,
-        subSystemNo: selectedItem?.SubSystemNo,
-        projectMilestone: selectedItem?.ProjectMilestone,
-        comment: selectedItem?.Comment,
-        handoverStatus: selectedItem?.HandoverStatus,
-        plannedStart: selectedItem?.PlannedStart,
-        plannedEnd: selectedItem?.PlannedEnd,
-        actualEnd: selectedItem?.ActualStart,
-        actualStart: selectedItem?.ActualStart,
-        responsible: selectedItem?.Responsible,
-        progress: selectedItem?.Progress,
-        estimate: selectedItem?.Estimate,
-        description: selectedItem?.Description,
-        identifier: selectedItem?.Identifier,
-        phase: selectedItem?.Phase,
-        commStatus: selectedItem?.CommStatus,
-        mCStatus: selectedItem?.MCStatus,
-        safetyMilestone: selectedItem?.SafetyMilestone,
+        CommpkgId: selectedItem?.CommpkgId,
+        CommpkgNo: selectedItem?.CommpkgNo,
+        SubSystemId: selectedItem?.SubSystemId,
+        SubSystemNo: selectedItem?.SubSystemNo,
+        ProjectMilestone: selectedItem?.ProjectMilestone,
+        Comment: selectedItem?.Comment,
+        HandoverStatus: selectedItem?.HandoverStatus,
+        PlannedStart: selectedItem?.PlannedStart,
+        PlannedEnd: selectedItem?.PlannedEnd,
+        ActualEnd: selectedItem?.ActualStart,
+        ActualStart: selectedItem?.ActualStart,
+        Responsible: selectedItem?.Responsible,
+        Progress: selectedItem?.Progress,
+        Estimate: selectedItem?.Estimate,
+        Description: selectedItem?.Description,
+        Identifier: selectedItem?.Identifier,
+        Phase: selectedItem?.Phase,
+        CommStatus: selectedItem?.CommStatus,
+        MCStatus: selectedItem?.MCStatus,
+        SafetyMilestone: selectedItem?.SafetyMilestone,
       });
     }
   }, [selectedItem]);
@@ -90,26 +90,26 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
       }
     `;
     const variables = {
-      commpkgId: formData.commpkgId,
-      commpkgNo: formData.commpkgNo,
-      subSystemId: formData.subSystemId,
-      subSystemNo: formData.subSystemNo,
-      description: formData.description,
-      projectMilestone: formData.projectMilestone,
-      comment: formData.comment,
-      handoverStatus: formData.handoverStatus,
-      plannedStart: formData.plannedStart,
-      plannedEnd: formData.plannedEnd,
-      actualEnd: formData.actualEnd,
-      actualStart: formData.actualStart,
-      responsible: formData.responsible,
-      progress: formData.progress,
-      estimate: formData.estimate,
-      identifier: formData.identifier,
-      phase: formData.phase,
-      commStatus: formData.commStatus,
-      mCStatus: formData.mCStatus,
-      safetyMilestone: formData.safetyMilestone,
+      commpkgId: formData.CommpkgId,
+      commpkgNo: formData.CommpkgNo,
+      subSystemId: formData.SubSystemId,
+      subSystemNo: formData.SubSystemNo,
+      description: formData.Description,
+      projectMilestone: formData.ProjectMilestone,
+      comment: formData.Comment,
+      handoverStatus: formData.HandoverStatus,
+      plannedStart: formData.PlannedStart,
+      plannedEnd: formData.PlannedEnd,
+      actualEnd: formData.ActualEnd,
+      actualStart: formData.ActualStart,
+      responsible: formData.Responsible,
+      progress: formData.Progress,
+      estimate: formData.Estimate,
+      identifier: formData.Identifier,
+      phase: formData.Phase,
+      commStatus: formData.CommStatus,
+      mCStatus: formData.MCStatus,
+      safetyMilestone: formData.SafetyMilestone,
     };
     RequestGraphQL<CommpkgData>(mutation, variables, (data: CommpkgData) => {
       console.log("Commpkg updated:", data);
@@ -123,7 +123,7 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
   const deleteSubSystem = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     console.log("CommpkgId");
-    console.log(formData.commpkgId);
+    console.log(formData.CommpkgId);
     const mutation = `
     mutation deleteCommpkg($commpkgId: String!) {
       deleteCommpkg(CommpkgId: $commpkgId) {
@@ -132,7 +132,7 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
     }
     `;
     const variables = {
-      commpkgId: formData.commpkgId,
+      commpkgId: formData.CommpkgId,
     };
     RequestGraphQL<CommpkgData>(mutation, variables, (data: CommpkgData) => {
       console.log("Commpkg deleted:", data);
@@ -162,9 +162,9 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
                 <Form.Label>Commpkg</Form.Label>
                 <Form.Control
                   type="text"
-                  value={formData.commpkgNo}
+                  value={formData.CommpkgNo}
                   onChange={(e) =>
-                    setFormData({ ...formData, commpkgNo: e.target.value })
+                    setFormData({ ...formData, CommpkgNo: e.target.value })
                   }
                   required
                   readOnly
@@ -174,9 +174,9 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
                 <Form.Label>Description</Form.Label>
                 <Form.Control
                   type="text"
-                  value={formData.description}
+                  value={formData.Description}
                   onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
+                    setFormData({ ...formData, Description: e.target.value })
                   }
                 />
               </Form.Group>

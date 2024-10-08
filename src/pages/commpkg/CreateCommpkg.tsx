@@ -7,7 +7,15 @@ import { SubSystemData } from "../subsystem/SubSystemData";
 import { ProjectMilestone, SafetyMilestone } from "../../library/Milestone";
 import { Phase } from "../../library/Phase";
 import { Identifier } from "../../library/Identifier";
-import { Button, DatePicker, Autocomplete } from "@equinor/eds-core-react";
+import "./commpkgTheme.css";
+import {
+  Button,
+  DatePicker,
+  Autocomplete,
+  AutocompleteChanges,
+  StarProgress,
+  TextField,
+} from "@equinor/eds-core-react";
 
 interface CreateSubSystemProps {
   show: boolean;
@@ -20,7 +28,16 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
   handleClose,
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
-
+  const handleOptionsChange =
+    (item: string) => (changes: AutocompleteChanges<string>) => {
+      // Convert changes to the format expected by setFormData
+      const value = changes.selectedItems[0]; // Adjust this line based on how changes are structured
+      setFormData({
+        ...formData,
+        [item]: value, // Use computed property name
+      });
+    };
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<CommpkgItem>({
     CommpkgId: "comm-" + uuidv4(),
     CommpkgNo: "",
@@ -43,29 +60,6 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
     MCStatus: "",
     SafetyMilestone: "",
   });
-
-  // const [formData, setFormData] = useState({
-  //   commpkgId: "comm-" + uuidv4(),
-  //   commpkgNo: "",
-  //   description: "",
-  //   subSystemId: "",
-  //   subSystemNo: "",
-  //   projectMilestone: "",
-  //   comment: "",
-  //   handoverStatus: "",
-  //   plannedStart: new Date(),
-  //   plannedEnd: new Date(),
-  //   actualEnd: new Date(),
-  //   actualStart: new Date(),
-  //   responsible: "",
-  //   progress: 0,
-  //   estimate: 0,
-  //   identifier: "",
-  //   phase: "",
-  //   commStatus: "",
-  //   mCStatus: "",
-  //   safetyMilestone: "",
-  // });
   const [subSystem, setSubSystem] = useState<SubSystemData | null>(null);
 
   useEffect(() => {
@@ -78,6 +72,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
   }, [show]);
 
   const handleSubmit = (event: React.FormEvent) => {
+    setLoading(true);
     event.preventDefault();
     const newCommpkgId = "comm-" + uuidv4();
     setFormData((prevData) => ({
@@ -155,6 +150,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
     };
     RequestGraphQL<CommpkgData>(mutation, input, (data: CommpkgData) => {
       console.log("Commpkg created:", data);
+      setLoading(false);
       handleClose();
       resetFormFields();
     });
@@ -216,7 +212,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       >
         <Offcanvas.Title>Create New Commpkg</Offcanvas.Title>
       </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
+      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#000000" }}>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formCommpkg">
             <Form.Label>Commpkg No</Form.Label>
@@ -240,6 +236,8 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             />
           </Form.Group>
           <br />
+          <TextField id="description" style={{ color: "black" }} />
+          <br />
           <Dropdown>
             <Dropdown.Toggle variant="secondary" id="dropdown-basic">
               {formData.SafetyMilestone || "Safety Milestone"}{" "}
@@ -261,27 +259,14 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             </Dropdown.Menu>
           </Dropdown>
           <br />
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              {formData.ProjectMilestone || "Project Milestone"}{" "}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {Object.values(ProjectMilestone).map((FormProjectMilestone) => (
-                <Dropdown.Item
-                  key={FormProjectMilestone}
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      ProjectMilestone: FormProjectMilestone,
-                    })
-                  }
-                >
-                  {FormProjectMilestone}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-          <Autocomplete label="" options={Object.values(ProjectMilestone)} />
+          <Autocomplete
+            label=""
+            options={Object.values(ProjectMilestone)}
+            onOptionsChange={handleOptionsChange("ProjectMilestone")}
+            style={{ color: "black", backgroundColor: "black" }}
+            placeholder="ProjectMilestone"
+            className="auto"
+          />
           <br />
           <Dropdown>
             <Dropdown.Toggle variant="secondary" id="dropdown-basic">
@@ -467,6 +452,17 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
           <br />
           <Button type="submit">Create Commpkg</Button>
         </Form>
+        {loading && (
+          <div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <center>
+              <StarProgress size={48} />
+            </center>
+          </div>
+        )}
       </Offcanvas.Body>
     </Offcanvas>
   );

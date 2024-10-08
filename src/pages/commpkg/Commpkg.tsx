@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { CommpkgTable } from "./CommpkgTable";
 import "../../App.css";
-import { Button, Spinner, Stack } from "react-bootstrap";
+import { Button, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
 import { CommpkgAnalytics } from "./CommpkgAnalytics";
-
+import { StarProgress } from "@equinor/eds-core-react";
 import CreateCommpkg from "./CreateCommpkg";
 
 export const Commpkg: React.FC = () => {
@@ -17,31 +17,31 @@ export const Commpkg: React.FC = () => {
 
   const fetchCommpkgData = () => {
     const query = `query getData(){
-  commpkgs() {
-     items {
-        CommpkgId
-        CommpkgNo
-        PlannedEnd
-        ProjectMilestone
-        Comment
-        HandoverStatus
-        PlannedStart
-        ActualStart
-        ActualEnd
-        Responsible
-        Progress
-        Estimate
-        Description
-        SubSystemNo
-        SubSystemId
-        Identifier
-        Phase
-        CommStatus
-        MCStatus
-        SafetyMilestone
-     }
-  }
-}`;
+      commpkgs() {
+        items {
+          CommpkgId
+          CommpkgNo
+          PlannedEnd
+          ProjectMilestone
+          Comment
+          HandoverStatus
+          PlannedStart
+          ActualStart
+          ActualEnd
+          Responsible
+          Progress
+          Estimate
+          Description
+          SubSystemNo
+          SubSystemId
+          Identifier
+          Phase
+          CommStatus
+          MCStatus
+          SafetyMilestone
+        }
+      }
+    }`;
 
     const variables = {};
 
@@ -64,17 +64,7 @@ export const Commpkg: React.FC = () => {
             onClick={fetchCommpkgData}
             disabled={display}
           >
-            {display ? (
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-            ) : (
-              "Get Commpkgs"
-            )}
+            {display ? "Loading..." : "Get Commpkgs"}
           </Button>
           <Button variant="secondary" onClick={handleCreateShow}>
             Create Commpkg
@@ -95,18 +85,25 @@ export const Commpkg: React.FC = () => {
             </Button>
           </div>
         </Stack>
-        {commpkgData ? (
+        {display && (
+          <div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <center>
+              <StarProgress size={48} />
+            </center>
+          </div>
+        )}
+        {!display && commpkgData ? (
           view === "Table" ? (
-            <>
-              <CommpkgTable commpkgs={commpkgData.commpkgs} />
-            </>
+            <CommpkgTable commpkgs={commpkgData.commpkgs} />
           ) : (
-            <>
-              <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
-            </>
+            <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
           )
         ) : (
-          <h1>Get Data</h1>
+          !display && <h1>Get Data</h1>
         )}
       </div>
       <CreateCommpkg
