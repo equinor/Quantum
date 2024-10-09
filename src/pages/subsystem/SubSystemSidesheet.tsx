@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button, Form, Offcanvas } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { SubSystemData, SubSystemItem } from "./SubSystemData";
 import "../../App.css";
+import { TextField } from "@equinor/eds-core-react";
 
 interface SubSystemSideSheetProps {
   show: boolean;
@@ -16,36 +17,44 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
   selectedItem,
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
-  const deleteId = selectedItem?.SubSystemId;
-  const [subSystemNo, setSubSystemNo] = useState<string>(
-    selectedItem?.SubSystemNo || ""
-  );
-  const [description, setDescription] = useState<string>("");
-  const [systemNo, setSystemNo] = useState<string>("");
-
+  const [formData, setFormData] = useState<SubSystemItem>({
+    SubSystemId: "",
+    SubSystemNo: "",
+    SystemId: "",
+    SystemNo: "",
+    Description: "",
+  });
+  const setFormText = (item: string) => (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [item]: e.target.value, // Use computed property name
+    });
+  };
   useEffect(() => {
     if (selectedItem) {
-      setSubSystemNo(selectedItem.SubSystemNo);
-      setDescription(selectedItem.Description);
-      setSystemNo(selectedItem.SystemNo);
+      setFormData({
+        SubSystemId: selectedItem.SubSystemId,
+        SubSystemNo: selectedItem.SubSystemNo,
+        SystemId: selectedItem.SystemId,
+        SystemNo: selectedItem.SystemNo,
+        Description: selectedItem.Description,
+      });
     }
   }, [selectedItem]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const mutation = `
-      mutation updateSystem(
+      mutation updateSubSystem(
         $subSystemId: String!,
         $subSystemNo: String!,
-        $systemId: String!,
         $systemNo: String!,
         $description: String!
       ) {
-       updateSystem(
+       updateSubSystem(
+       SubSystemId: $subSystemId,
           item: {
-            SubSystemId: $subSystemId,
             SubSystemNo: $subSystemNo,
-            SystemId: $systemId,
             SystemNo: $systemNo,
             Description: $description
           }
@@ -55,10 +64,10 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
       }
     `;
     const variables = {
-      subSystemId: deleteId,
-      subSystemNo,
-      description,
-      systemNo,
+      subSystemId: formData.SubSystemId,
+      subSystemNo: formData.SubSystemNo,
+      description: formData.Description,
+      systemNo: formData.SystemNo,
     };
     RequestGraphQL<SubSystemData>(
       mutation,
@@ -69,16 +78,13 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
       }
     );
     console.log("Form submitted with:", {
-      subSystemNo,
-      description,
-      systemNo,
+      formData,
     });
   };
 
   const deleteSubSystem = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    console.log("deleteId");
-    console.log(deleteId);
+    console.log("Deleted: " + formData.SubSystemNo);
     const mutation = `
     mutation deleteSubSystem($subSystemId: String!) {
       deleteSubSystem(SubSystemId: $subSystemId) {
@@ -87,7 +93,7 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
     }
     `;
     const variables = {
-      subSystemId: deleteId,
+      subSystemId: formData.SubSystemId,
     };
     RequestGraphQL<SubSystemData>(
       mutation,
@@ -117,25 +123,21 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
         {selectedItem ? (
           <div>
             <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formSubSystemNo">
-                <Form.Label>System No</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={systemNo}
-                  onChange={(e) => setSystemNo(e.target.value)}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="formSubSystemDescription">
-                <Form.Label>Sub System Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </Form.Group>
+              <p>SubSystemNo</p>
+              <TextField
+                id="SubSystemNo"
+                value={formData.SubSystemNo}
+                onChange={setFormText("SubSystemNo")}
+              />
               <br />
-
+              <p>Description</p>
+              <TextField
+                id="description"
+                multiline
+                rowsMax={10}
+                value={formData.Description}
+                onChange={setFormText("Description")}
+              />
               <Button variant="secondary" type="submit">
                 Update Sub System
               </Button>

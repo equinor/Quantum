@@ -40,7 +40,6 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
       { field: "PlannedEnd", headerName: "PlannedEnd", filter: true },
       { field: "ActualStart", headerName: "ActualStart", filter: true },
       { field: "ActualEnd", headerName: "ActualEnd", filter: true },
-      { field: "ActualStart", headerName: "ActualStart", filter: true },
       { field: "Progress", headerName: "Progress", filter: true },
       { field: "Estimate", headerName: "Estimate", filter: true },
       { field: "HandoverStatus", headerName: "HandoverStatus", filter: true },

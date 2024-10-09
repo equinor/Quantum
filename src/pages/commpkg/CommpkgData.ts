@@ -4,8 +4,8 @@ export interface CommpkgItem {
   ProjectMilestone: string;
   Comment: string;
   HandoverStatus: string;
-  PlannedStart: Date;
-  PlannedEnd: Date;
+  PlannedStart: Date | null;
+  PlannedEnd: Date | null;
   ActualStart: Date | null;
   ActualEnd: Date | null;
   Responsible: string;

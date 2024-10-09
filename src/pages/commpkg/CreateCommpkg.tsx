@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Offcanvas, Form, Dropdown, Stack } from "react-bootstrap";
+import React, { useState, useEffect, ChangeEvent } from "react";
+import { Offcanvas, Form, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
 import { CommpkgData, CommpkgItem } from "./CommpkgData";
@@ -7,6 +7,7 @@ import { SubSystemData } from "../subsystem/SubSystemData";
 import { ProjectMilestone, SafetyMilestone } from "../../library/Milestone";
 import { Phase } from "../../library/Phase";
 import { Identifier } from "../../library/Identifier";
+import { createCommpkg } from "../../graphql/Queries";
 import "./commpkgTheme.css";
 import {
   Button,
@@ -28,7 +29,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
   handleClose,
 }) => {
   const { RequestGraphQL } = useRequestGraphQL();
-  const handleOptionsChange =
+  const setSelectedEnum =
     (item: string) => (changes: AutocompleteChanges<string>) => {
       // Convert changes to the format expected by setFormData
       const value = changes.selectedItems[0]; // Adjust this line based on how changes are structured
@@ -37,6 +38,21 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
         [item]: value, // Use computed property name
       });
     };
+
+  const setFormText = (item: string) => (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [item]: e.target.value, // Use computed property name
+    });
+  };
+  const setFormFloat =
+    (item: string | number) => (e: ChangeEvent<HTMLInputElement>) => {
+      setFormData({
+        ...formData,
+        [item]: parseFloat(e.target.value) || 0, // Use computed property name
+      });
+    };
+
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<CommpkgItem>({
     CommpkgId: "comm-" + uuidv4(),
@@ -49,8 +65,8 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
     HandoverStatus: "",
     PlannedStart: new Date(),
     PlannedEnd: new Date(),
-    ActualEnd: new Date(),
-    ActualStart: new Date(),
+    ActualEnd: null,
+    ActualStart: null,
     Responsible: "",
     Progress: 0,
     Estimate: 0,
@@ -80,52 +96,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       commpkgId: newCommpkgId,
     }));
     console.log("Commpkg created:", formData);
-    const mutation = `
-      mutation createCommpkg(
-        $commpkgId: String!,
-        $commpkgNo: String!,
-        $subSystemId: String!,
-        $subSystemNo: String!,
-        $description: String!,
-        $projectMilestone: String!,
-        $safetyMilestone: String!,
-        $comment: String!,
-        $progress: Int!,
-        $estimate: Decimal!,
-        $plannedStart: DateTime!,
-        $plannedEnd: DateTime!,
-        $actualStart: DateTime!,
-        $actualEnd: DateTime!,
-        $responsible: String!,
-        $identifier: String!,
-        $phase: String!
-
-      ) {
-        createCommpkg(
-          item: {
-            CommpkgId: $commpkgId
-            CommpkgNo: $commpkgNo
-            SubSystemId: $subSystemId
-            SubSystemNo: $subSystemNo
-            Description: $description
-            ProjectMilestone: $projectMilestone
-            SafetyMilestone: $safetyMilestone
-            Comment:  $comment
-            Progress: $progress
-            Estimate: $estimate
-            PlannedStart: $plannedStart
-            PlannedEnd: $plannedEnd
-            ActualStart: $actualStart
-            ActualEnd: $actualEnd
-            Responsible: $responsible
-            Identifier: $identifier
-            Phase: $phase
-          }
-        ) {
-          result
-        }
-      }
-    `;
+    const mutation = createCommpkg;
     const input = {
       commpkgId: formData.CommpkgId,
       commpkgNo: formData.CommpkgNo,
@@ -137,8 +108,6 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       handoverStatus: formData.HandoverStatus,
       plannedStart: formData.PlannedStart,
       plannedEnd: formData.PlannedEnd,
-      actualEnd: formData.ActualEnd,
-      actualStart: formData.ActualStart,
       responsible: formData.Responsible,
       progress: formData.Progress,
       estimate: formData.Estimate,
@@ -184,8 +153,8 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       HandoverStatus: "",
       PlannedStart: new Date(),
       PlannedEnd: new Date(),
-      ActualEnd: new Date(),
-      ActualStart: new Date(),
+      ActualEnd: null,
+      ActualStart: null,
       Responsible: "",
       Progress: 0,
       Estimate: 0,
@@ -203,7 +172,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       show={show}
       onHide={handleClose}
       placement="end"
-      style={{ width: "800px" }}
+      style={{ width: "1000px" }}
     >
       <Offcanvas.Header
         closeButton
@@ -214,234 +183,114 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       </Offcanvas.Header>
       <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
         <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formCommpkg">
-            <Form.Label>Commpkg No</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.CommpkgNo}
-              onChange={(e) =>
-                setFormData({ ...formData, CommpkgNo: e.target.value })
-              }
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formDescription">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Description}
-              onChange={(e) =>
-                setFormData({ ...formData, Description: e.target.value })
-              }
-            />
-          </Form.Group>
+          <p>Commpkg No</p>
+          <TextField
+            id="commpkgNo"
+            value={formData.CommpkgNo}
+            onChange={setFormText("CommpkgNo")}
+          />
           <br />
-          <TextField id="description" color="secondary" />
+          <p>Description</p>
+          <TextField
+            id="description"
+            multiline
+            rowsMax={10}
+            value={formData.Description}
+            onChange={setFormText("Description")}
+          />
           <br />
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              {formData.SafetyMilestone || "Safety Milestone"}{" "}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {Object.values(SafetyMilestone).map((formSafetyMilestone) => (
-                <Dropdown.Item
-                  key={formSafetyMilestone}
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      SafetyMilestone: formSafetyMilestone,
-                    })
-                  }
-                >
-                  {formSafetyMilestone}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+          <Autocomplete
+            label=""
+            options={Object.values(SafetyMilestone)}
+            onOptionsChange={setSelectedEnum("SafetyMilestone")}
+            style={{ color: "black", backgroundColor: "black" }}
+            placeholder="SafetyMilestone"
+            className="auto"
+          />
           <br />
           <Autocomplete
             label=""
             options={Object.values(ProjectMilestone)}
-            onOptionsChange={handleOptionsChange("ProjectMilestone")}
+            onOptionsChange={setSelectedEnum("ProjectMilestone")}
             style={{ color: "black", backgroundColor: "black" }}
             placeholder="ProjectMilestone"
             className="auto"
           />
           <br />
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              {formData.Phase || "Phase"}{" "}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {Object.values(Phase).map((formPhase) => (
-                <Dropdown.Item
-                  key={formPhase}
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      Phase: formPhase,
-                    })
-                  }
-                >
-                  {formPhase}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+          <Autocomplete
+            label=""
+            options={Object.values(Phase)}
+            onOptionsChange={setSelectedEnum("Phase")}
+            style={{ color: "black", backgroundColor: "black" }}
+            placeholder="Phase"
+            className="auto"
+          />
           <br />
-          <Dropdown>
-            <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-              {formData.Identifier || "Identifier"}{" "}
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-              {Object.values(Identifier).map((formIdentifier) => (
-                <Dropdown.Item
-                  key={formIdentifier}
-                  onClick={() =>
-                    setFormData({
-                      ...formData,
-                      Identifier: formIdentifier,
-                    })
-                  }
-                >
-                  {formIdentifier}
-                </Dropdown.Item>
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
+          <Autocomplete
+            label=""
+            options={Object.values(Identifier)}
+            onOptionsChange={setSelectedEnum("Identifier")}
+            style={{ color: "black", backgroundColor: "black" }}
+            placeholder="Identifier"
+            className="auto"
+          />
           <br />
-          <Form.Group controlId="formComment">
-            <Form.Label>Comment</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Comment}
-              onChange={(e) =>
-                setFormData({ ...formData, Comment: e.target.value })
-              }
-            />
-          </Form.Group>
+          <p>Comment</p>
+          <TextField
+            id="Comment"
+            multiline
+            rowsMax={10}
+            value={formData.Comment}
+            onChange={setFormText("Comment")}
+          />
           <br />
-          <Stack direction="horizontal" gap={0}>
-            {formData.SubSystemNo && (
-              <Form.Group controlId="formSelectedSubSystem">
-                <Form.Control
-                  type="text"
-                  value={formData.SubSystemNo}
-                  readOnly
-                />
-              </Form.Group>
-            )}
-            <Dropdown>
-              <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                Select Sub System
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                {subSystem?.subSystems.items.map((subsystem) => (
-                  <Dropdown.Item
-                    key={subsystem.SubSystemId}
-                    onClick={() => {
-                      setFormData({
-                        ...formData,
-                        SubSystemId: subsystem.SubSystemId,
-                        SubSystemNo: subsystem.SubSystemNo,
-                      });
-                    }}
-                  >
-                    {subsystem.SystemNo + subsystem.SubSystemNo}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-          </Stack>
+          <Autocomplete
+            label=""
+            options={
+              subSystem
+                ? subSystem.subSystems.items.map((item) => item.SubSystemNo)
+                : []
+            }
+            onOptionsChange={setSelectedEnum("SubSystemNo")}
+            style={{ color: "black", backgroundColor: "black" }}
+            placeholder="SubSystemNo"
+            className="auto"
+          />
           <br />
-          <Form.Group controlId="formProgress">
-            <Form.Label>Progress</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Progress}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  Progress: parseInt(e.target.value, 10) || 0,
-                })
-              }
-            />
-          </Form.Group>
+          <p>Progress</p>
+          <TextField
+            id="Progress"
+            value={formData.Progress}
+            onChange={setFormFloat("Progress")}
+          />
           <br />
-          <Form.Group controlId="formEstimate">
-            <Form.Label>Estimate</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.Estimate}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  Estimate: parseFloat(e.target.value) || 0,
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group controlId="formPlannedStart">
-            <Form.Label>Planned Start</Form.Label>
-            <Form.Control
-              type="date"
-              value={formData.PlannedStart.toLocaleDateString("no-NO", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
-                .split(".")
-                .reverse()
-                .join("-")} // Convert Date to Norwegian format and then to string
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  PlannedStart: new Date(e.target.value), // Convert string back to Date
-                })
-              }
-            />
-          </Form.Group>
-          <Form.Group controlId="formPlannedEnd">
-            <Form.Label>Planned End</Form.Label>
-            <Form.Control
-              type="date"
-              value={formData.PlannedEnd.toLocaleDateString("no-NO", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-              })
-                .split(".")
-                .reverse()
-                .join("-")} // Convert Date to Norwegian format and then to string
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  PlannedEnd: new Date(e.target.value), // Convert string back to Date
-                })
-              }
-            />
-          </Form.Group>
+          <p>Estimate</p>
+          <TextField
+            id="Estimate"
+            value={formData.Estimate}
+            onChange={setFormFloat("Estimate")}
+          />
           <Stack direction="horizontal" gap={5}>
             <Form.Group controlId="formActualStart">
-              <Form.Label>Actual Start</Form.Label>
+              <Form.Label>Planned Start</Form.Label>
               <DatePicker
-                value={formData.ActualStart}
+                value={formData.PlannedStart}
                 onChange={(date: Date | null) =>
                   setFormData({
                     ...formData,
-                    ActualStart: date,
+                    PlannedStart: date,
                   })
                 }
               ></DatePicker>
             </Form.Group>
             <Form.Group>
-              <Form.Label>Actual End</Form.Label>
+              <Form.Label>Planned End</Form.Label>
               <DatePicker
-                value={formData.ActualEnd}
+                value={formData.PlannedEnd}
                 onChange={(date: Date | null) =>
                   setFormData({
                     ...formData,
-                    ActualEnd: date,
+                    PlannedEnd: date,
                   })
                 }
               ></DatePicker>
@@ -450,19 +299,10 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
           <br />
           <br />
           <br />
-          <Button type="submit">Create Commpkg</Button>
+          <Button type="submit">
+            {loading ? <StarProgress size={16} /> : "Create Commpkg "}
+          </Button>
         </Form>
-        {loading && (
-          <div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <center>
-              <StarProgress size={48} />
-            </center>
-          </div>
-        )}
       </Offcanvas.Body>
     </Offcanvas>
   );
