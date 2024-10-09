@@ -5,6 +5,7 @@ import { Button, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData } from "./CommpkgData";
 import { CommpkgAnalytics } from "./CommpkgAnalytics";
+import { CommpkgGantt } from "./CommpkgGantt";
 import { StarProgress } from "@equinor/eds-core-react";
 import CreateCommpkg from "./CreateCommpkg";
 
@@ -78,13 +79,30 @@ export const Commpkg: React.FC = () => {
               Table
             </Button>
             <Button
-              variant={view === "Table" ? "outline-light" : "light"}
+              variant={view === "Analytics" ? "light" : "outline-light"}
               onClick={() => setView("Analytics")}
             >
               Analytics
             </Button>
+            <Button
+              variant={view === "Gantt" ? "light" : "outline-light"}
+              onClick={() => setView("Gantt")}
+            >
+              Gantt
+            </Button>
           </div>
         </Stack>
+        {!display && commpkgData ? (
+          view === "Table" ? (
+            <CommpkgTable commpkgs={commpkgData.commpkgs} />
+          ) : view === "Analytics" ? (
+            <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
+          ) : (
+            <CommpkgGantt commpkgs={commpkgData.commpkgs} />
+          )
+        ) : (
+          !display && <h1>Get Data</h1>
+        )}
         {display && (
           <div>
             <br />
@@ -95,15 +113,6 @@ export const Commpkg: React.FC = () => {
               <StarProgress size={48} />
             </center>
           </div>
-        )}
-        {!display && commpkgData ? (
-          view === "Table" ? (
-            <CommpkgTable commpkgs={commpkgData.commpkgs} />
-          ) : (
-            <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
-          )
-        ) : (
-          !display && <h1>Get Data</h1>
         )}
       </div>
       <CreateCommpkg

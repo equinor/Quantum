@@ -212,7 +212,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
       >
         <Offcanvas.Title>Create New Commpkg</Offcanvas.Title>
       </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#000000" }}>
+      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formCommpkg">
             <Form.Label>Commpkg No</Form.Label>
@@ -236,7 +236,7 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
             />
           </Form.Group>
           <br />
-          <TextField id="description" style={{ color: "black" }} />
+          <TextField id="description" color="secondary" />
           <br />
           <Dropdown>
             <Dropdown.Toggle variant="secondary" id="dropdown-basic">
