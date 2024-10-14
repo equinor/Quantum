@@ -6,16 +6,20 @@ import { AgChartOptions } from "ag-charts-community";
 export const CommpkgAnalytics: React.FC<CommpkgData> = (props) => {
   const commpkgs = props.commpkgs?.items || [];
 
-  // Transform the data to count occurrences of each Priority1 value
+  // Transform the data to count occurrences of each SafetyMilestone value
   const transformedData = commpkgs.reduce((acc, pkg) => {
-    const found = acc.find((item) => item.PlannedEnd === pkg.PlannedEnd);
-    if (found) {
-      found.count += 1;
-    } else {
-      acc.push({ PlannedEnd: pkg.PlannedEnd, count: 1 });
+    if (pkg.SafetyMilestone !== null) {
+      const found = acc.find(
+        (item) => item.SafetyMilestone === pkg.SafetyMilestone
+      );
+      if (found) {
+        found.count += 1;
+      } else {
+        acc.push({ SafetyMilestone: pkg.SafetyMilestone, count: 1 });
+      }
     }
     return acc;
-  }, [] as { PlannedEnd: Date; count: number }[]);
+  }, [] as { SafetyMilestone: string; count: number }[]);
 
   const [chartOptions, setChartOptions] = useState<AgChartOptions>({
     theme: {
@@ -25,7 +29,7 @@ export const CommpkgAnalytics: React.FC<CommpkgData> = (props) => {
     series: [
       {
         type: "bar",
-        xKey: "Priority1",
+        xKey: "SafetyMilestone",
         yKey: "count",
         yName: "Count",
         label: {
@@ -45,14 +49,18 @@ export const CommpkgAnalytics: React.FC<CommpkgData> = (props) => {
 
   useEffect(() => {
     const newTransformedData = commpkgs.reduce((acc, pkg) => {
-      const found = acc.find((item) => item.PlannedEnd === pkg.PlannedEnd);
-      if (found) {
-        found.count += 1;
-      } else {
-        acc.push({ PlannedEnd: pkg.PlannedEnd, count: 1 });
+      if (pkg.SafetyMilestone !== null) {
+        const found = acc.find(
+          (item) => item.SafetyMilestone === pkg.SafetyMilestone
+        );
+        if (found) {
+          found.count += 1;
+        } else {
+          acc.push({ SafetyMilestone: pkg.SafetyMilestone, count: 1 });
+        }
       }
       return acc;
-    }, [] as { PlannedEnd: Date; count: number }[]);
+    }, [] as { SafetyMilestone: string; count: number }[]);
 
     setChartOptions((prevOptions) => ({
       ...prevOptions,

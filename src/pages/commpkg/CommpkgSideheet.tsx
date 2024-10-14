@@ -4,13 +4,13 @@ import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { CommpkgData, CommpkgItem } from "./CommpkgData";
 import "../../App.css";
 
-interface SubSystemSideSheetProps {
+interface SideSheetProps {
   show: boolean;
   handleClose: () => void;
   selectedItem: CommpkgItem | null;
 }
 
-const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
+const CommpkgSideSheet: React.FC<SideSheetProps> = ({
   show,
   handleClose,
   selectedItem,
@@ -202,4 +202,4 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
   );
 };
 
-export default SubSystemSideSheet;
+export default CommpkgSideSheet;

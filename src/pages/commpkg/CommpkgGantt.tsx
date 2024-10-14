@@ -18,8 +18,8 @@ export const CommpkgGantt: React.FC<CommpkgData> = (props) => {
   const rows = commpkgs.map((pkg) => [
     pkg.CommpkgId,
     pkg.CommpkgNo,
-    new Date(pkg.PlannedStart),
-    new Date(pkg.PlannedEnd),
+    pkg.PlannedStart ? new Date(pkg.PlannedStart) : null, // Handle null values
+    pkg.PlannedEnd ? new Date(pkg.PlannedEnd) : null, // Handle null values
     null, // Duration can be calculated if needed
     pkg.Progress,
     "", // Dependencies can be added if available
