@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Offcanvas, Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import { SideSheet, Button } from "@equinor/eds-core-react";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
-import { SystemData, SystemItem } from "./SystemData";
+import { createSystem, SystemData, SystemItem } from "./SystemData";
 
 interface SystemSideSheetProps {
   show: boolean;
@@ -36,33 +37,7 @@ const CreateSystem: React.FC<SystemSideSheetProps> = ({
     setSystemId("sys-" + newSystemId);
     console.log(newSystemId);
     console.log(systemId);
-    const mutation = `
-      mutation 
-        createSystem(
-          $systemId: String!
-          ,$systemNo: String!
-          ,$systemDescription: String!
-          ,$systemOwner: String!
-          ,$commissioningLead: String!
-          ,$technicalIntegrityResponsible: String!
-          ,$operationResponsible: String!
-          ) {
-        createSystem(
-          item:{
-            SystemId: $systemId
-            SystemNo: $systemNo
-            SystemDescription: $systemDescription
-            SystemOwner: $systemOwner
-            CommissioningLead: $commissioningLead
-            TechnicalIntegrityResponsible: $technicalIntegrityResponsible
-            OperationResponsible: $operationResponsible
-          }
-        )  
-        {
-        result
-        }
-      }
-      `;
+    const mutation = createSystem;
     const input = {
       systemId,
       systemNo,
@@ -91,76 +66,68 @@ const CreateSystem: React.FC<SystemSideSheetProps> = ({
   };
 
   return (
-    <Offcanvas
-      show={show}
-      onHide={handleClose}
-      placement="end"
-      style={{ width: "800px" }}
+    <SideSheet
+      title={"Create System"}
+      open={show}
+      onClose={handleClose}
+      style={{
+        height: "100%",
+        width: "800px",
+      }}
     >
-      <Offcanvas.Header
-        closeButton
-        className="custom-close-button"
-        style={{ backgroundColor: "#323539", color: "#ffffff" }}
-      >
-        <Offcanvas.Title>Create New System</Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formSystemNo">
-            <Form.Label>System No</Form.Label>
-            <Form.Control
-              type="text"
-              value={systemNo}
-              onChange={(e) => setSystemNo(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formSystemDescription">
-            <Form.Label>System Description</Form.Label>
-            <Form.Control
-              type="text"
-              value={systemDescription}
-              onChange={(e) => setSystemDescription(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formSystemOwner">
-            <Form.Label>System Owner</Form.Label>
-            <Form.Control
-              type="text"
-              value={systemOwner}
-              onChange={(e) => setSystemOwner(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formCommissioningLead">
-            <Form.Label>Commissioning Lead</Form.Label>
-            <Form.Control
-              type="text"
-              value={commissioningLead}
-              onChange={(e) => setcommissioningLead(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formTechnicalIntegrityResponsible">
-            <Form.Label>Technical Integrity Responsible</Form.Label>
-            <Form.Control
-              type="text"
-              value={technicalIntegrityResponsible}
-              onChange={(e) => setTechnicalIntegrityResponsible(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formOperationResponsible">
-            <Form.Label>Operation Responsible</Form.Label>
-            <Form.Control
-              type="text"
-              value={operationResponsible}
-              onChange={(e) => setOperationResponsible(e.target.value)}
-            />
-          </Form.Group>
-          <Button variant="secondary" type="submit">
-            Create System
-          </Button>
-        </Form>
-      </Offcanvas.Body>
-    </Offcanvas>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formSystemNo">
+          <Form.Label>System No</Form.Label>
+          <Form.Control
+            type="text"
+            value={systemNo}
+            onChange={(e) => setSystemNo(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="formSystemDescription">
+          <Form.Label>System Description</Form.Label>
+          <Form.Control
+            type="text"
+            value={systemDescription}
+            onChange={(e) => setSystemDescription(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formSystemOwner">
+          <Form.Label>System Owner</Form.Label>
+          <Form.Control
+            type="text"
+            value={systemOwner}
+            onChange={(e) => setSystemOwner(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formCommissioningLead">
+          <Form.Label>Commissioning Lead</Form.Label>
+          <Form.Control
+            type="text"
+            value={commissioningLead}
+            onChange={(e) => setcommissioningLead(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formTechnicalIntegrityResponsible">
+          <Form.Label>Technical Integrity Responsible</Form.Label>
+          <Form.Control
+            type="text"
+            value={technicalIntegrityResponsible}
+            onChange={(e) => setTechnicalIntegrityResponsible(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group controlId="formOperationResponsible">
+          <Form.Label>Operation Responsible</Form.Label>
+          <Form.Control
+            type="text"
+            value={operationResponsible}
+            onChange={(e) => setOperationResponsible(e.target.value)}
+          />
+        </Form.Group>
+        <Button type="submit">Create System</Button>
+      </Form>
+    </SideSheet>
   );
 };
 

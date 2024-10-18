@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { TagTable } from "./TagTable";
 import "../../App.css";
-import { Button, Spinner, Stack } from "react-bootstrap";
+import { Spinner, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { TagData } from "./TagData";
 import CreateTag from "./CreateTag";
 import { TagAnalytics } from "./TagAnalytics";
+import { Button } from "@equinor/eds-core-react";
 
 export const System: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
@@ -43,7 +44,7 @@ export const System: React.FC = () => {
     <>
       <div className="center-content">
         <Stack direction="horizontal" gap={3}>
-          <Button variant="secondary" onClick={fetchData} disabled={display}>
+          <Button onClick={fetchData} disabled={display}>
             {display ? (
               <Spinner
                 as="span"
@@ -56,18 +57,16 @@ export const System: React.FC = () => {
               "Get Tags"
             )}
           </Button>
-          <Button variant="secondary" onClick={handleCreateTagShow}>
-            Create Tag
-          </Button>
+          <Button onClick={handleCreateTagShow}>Create Tag</Button>
           <div className="p-2 ms-auto">
             <Button
-              variant={view === "Table" ? "light" : "outline-light"}
+              color={view === "Table" ? "primary" : "secondary"}
               onClick={() => setView("Table")}
             >
               Table
             </Button>
             <Button
-              variant={view === "Table" ? "outline-light" : "light"}
+              color={view === "Table" ? "secondary" : "primary"}
               onClick={() => setView("Analytics")}
             >
               Analytics

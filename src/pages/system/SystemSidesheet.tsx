@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Offcanvas } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
-import { SystemData } from "./SystemData";
+import { SystemData, updateSystem } from "./SystemData";
 import "../../App.css";
+import { SideSheet, Button, Icon } from "@equinor/eds-core-react";
+import { save } from "@equinor/eds-icons";
 
 interface System {
   SystemId: string;
@@ -36,6 +38,7 @@ const SystemSideSheet: React.FC<SideSheetProps> = ({
   const [technicalIntegrityResponsible, setTechnicalIntegrityResponsible] =
     useState<string>("");
   const [operationResponsible, setOperationResponsible] = useState<string>("");
+  Icon.add({ save });
 
   useEffect(() => {
     if (selectedItem) {
@@ -50,31 +53,9 @@ const SystemSideSheet: React.FC<SideSheetProps> = ({
     }
   }, [selectedItem]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const mutation = `
-    mutation 
-      updateSystem(
-        $systemId: String!, 
-        $systemNo: String!,
-        $systemOwner: String!,
-        $systemDescription: String!,
-        $technicalIntegrityResponsible:String!,
-        $operationResponsible: String!
-        $commissioningLead: String!
-        ) {
-      updateSystem(SystemId: $systemId,item:{
-        SystemOwner: $systemOwner,
-        SystemNo: $systemNo
-        SystemDescription: $systemDescription,
-        CommissioningLead: $commissioningLead,
-        TechnicalIntegrityResponsible: $technicalIntegrityResponsible,
-        OperationResponsible: $operationResponsible
-      } )  {
-   result
-}
-}
-    `;
+    const mutation = updateSystem;
     const variables = {
       systemId: deleteId,
       systemOwner,
@@ -117,93 +98,84 @@ const SystemSideSheet: React.FC<SideSheetProps> = ({
   };
 
   return (
-    <Offcanvas
-      show={show}
-      onHide={handleClose}
-      placement="end"
-      style={{ width: "800px" }}
+    <SideSheet
+      title={"System: " + selectedItem?.SystemNo}
+      open={show}
+      onClose={handleClose}
+      style={{
+        height: "100%",
+        width: "800px",
+      }}
     >
-      <Offcanvas.Header
-        closeButton
-        className="custom-close-button d-flex justify-content-between"
-        style={{ backgroundColor: "#323539", color: "#ffffff" }}
-      >
-        <Offcanvas.Title>Commissioning Package Details</Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
-        {selectedItem ? (
-          <div>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group controlId="formSystemNo">
-                <Form.Label>System No</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={systemNo}
-                  onChange={(e) => setSystemNo(e.target.value)}
-                  required
-                />
-              </Form.Group>
-              <Form.Group controlId="formSystemDescription">
-                <Form.Label>System Description</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={systemDescription}
-                  onChange={(e) => setSystemDescription(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="formSystemOwner">
-                <Form.Label>System Owner</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={systemOwner}
-                  onChange={(e) => setSystemOwner(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="formCommissioningLead">
-                <Form.Label>Commissioning Lead</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={commissioningLead}
-                  onChange={(e) => setcommissioningLead(e.target.value)}
-                />
-              </Form.Group>
-              <Form.Group controlId="formTechnicalIntegrityResponsible">
-                <Form.Label>Technical Integrity Responsible</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={technicalIntegrityResponsible}
-                  onChange={(e) =>
-                    setTechnicalIntegrityResponsible(e.target.value)
-                  }
-                />
-              </Form.Group>
-              <Form.Group controlId="formOperationResponsible">
-                <Form.Label>Operation Responsible</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={operationResponsible}
-                  onChange={(e) => setOperationResponsible(e.target.value)}
-                />
-              </Form.Group>
-              <br />
+      {selectedItem ? (
+        <div>
+          <Form>
+            <Form.Group controlId="formSystemNo">
+              <Form.Label>System No</Form.Label>
+              <Form.Control
+                type="text"
+                value={systemNo}
+                onChange={(e) => setSystemNo(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group controlId="formSystemDescription">
+              <Form.Label>System Description</Form.Label>
+              <Form.Control
+                type="text"
+                value={systemDescription}
+                onChange={(e) => setSystemDescription(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formSystemOwner">
+              <Form.Label>System Owner</Form.Label>
+              <Form.Control
+                type="text"
+                value={systemOwner}
+                onChange={(e) => setSystemOwner(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formCommissioningLead">
+              <Form.Label>Commissioning Lead</Form.Label>
+              <Form.Control
+                type="text"
+                value={commissioningLead}
+                onChange={(e) => setcommissioningLead(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formTechnicalIntegrityResponsible">
+              <Form.Label>Technical Integrity Responsible</Form.Label>
+              <Form.Control
+                type="text"
+                value={technicalIntegrityResponsible}
+                onChange={(e) =>
+                  setTechnicalIntegrityResponsible(e.target.value)
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="formOperationResponsible">
+              <Form.Label>Operation Responsible</Form.Label>
+              <Form.Control
+                type="text"
+                value={operationResponsible}
+                onChange={(e) => setOperationResponsible(e.target.value)}
+              />
+            </Form.Group>
+            <br />
 
-              <Button variant="secondary" type="submit">
-                Update System
-              </Button>
-              <Button
-                className="delete-btn"
-                variant="danger"
-                onClick={deleteSystem}
-              >
-                Delete System
-              </Button>
-            </Form>
-          </div>
-        ) : (
-          <p>No system selected.</p>
-        )}
-      </Offcanvas.Body>
-    </Offcanvas>
+            <Button variant="ghost_icon" onClick={handleSubmit}>
+              <Icon data={save}></Icon>
+            </Button>
+
+            <Button color="danger" onClick={deleteSystem}>
+              Delete System
+            </Button>
+          </Form>
+        </div>
+      ) : (
+        <p>No system selected.</p>
+      )}
+    </SideSheet>
   );
 };
 

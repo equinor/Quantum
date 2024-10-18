@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { CommpkgTable } from "./CommpkgTable";
-import "../../App.css";
-import { Button, Stack } from "react-bootstrap";
+
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
-import { CommpkgData } from "./CommpkgData";
+import { CommpkgData, getCommpkg } from "./CommpkgData";
 import { CommpkgAnalytics } from "./CommpkgAnalytics";
 import { CommpkgGantt } from "./CommpkgGantt";
 import { StarProgress } from "@equinor/eds-core-react";
 import CreateCommpkg from "./CreateCommpkg";
+import CommpkgSidebar from "./CommpkgSidebar";
+//import CommpkgSidebar from "./CommpkgSidebar";
 
 export const Commpkg: React.FC = () => {
   const { RequestGraphQL } = useRequestGraphQL();
@@ -17,32 +18,7 @@ export const Commpkg: React.FC = () => {
   const [showCreate, setShowCreate] = useState<boolean>(false);
 
   const fetchCommpkgData = () => {
-    const query = `query getData(){
-      commpkgs() {
-        items {
-          CommpkgId
-          CommpkgNo
-          PlannedEnd
-          ProjectMilestone
-          Comment
-          HandoverStatus
-          PlannedStart
-          ActualStart
-          ActualEnd
-          Responsible
-          Progress
-          Estimate
-          Description
-          SubSystemNo
-          SubSystemId
-          Identifier
-          Phase
-          CommStatus
-          MCStatus
-          SafetyMilestone
-        }
-      }
-    }`;
+    const query = getCommpkg;
 
     const variables = {};
 
@@ -53,71 +29,47 @@ export const Commpkg: React.FC = () => {
     });
   };
 
-  const handleCreateShow = () => setShowCreate(true);
-  const handleCreateClose = () => setShowCreate(false);
+  const handleCreate = () => setShowCreate(!showCreate);
 
   return (
     <>
-      <div className="center-content">
-        <Stack direction="horizontal" gap={3}>
-          <Button
-            variant="outline-light"
-            onClick={fetchCommpkgData}
-            disabled={display}
-          >
-            {display ? "Loading..." : "Get Commpkgs"}
-          </Button>
-          <Button variant="secondary" onClick={handleCreateShow}>
-            Create Commpkg
-          </Button>
-          <div className="p-2"></div>
-          <div className="p-2 ms-auto">
-            <Button
-              variant={view === "Table" ? "light" : "outline-light"}
-              onClick={() => setView("Table")}
-            >
-              Table
-            </Button>
-            <Button
-              variant={view === "Analytics" ? "light" : "outline-light"}
-              onClick={() => setView("Analytics")}
-            >
-              Analytics
-            </Button>
-            <Button
-              variant={view === "Gantt" ? "light" : "outline-light"}
-              onClick={() => setView("Gantt")}
-            >
-              Gantt
-            </Button>
-          </div>
-        </Stack>
-        {!display && commpkgData ? (
-          view === "Table" ? (
-            <CommpkgTable commpkgs={commpkgData.commpkgs} />
-          ) : view === "Analytics" ? (
-            <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
+      <div id="content-container">
+        <div id="sidebar">
+          <CommpkgSidebar
+            fetchData={fetchCommpkgData}
+            handleCreate={handleCreate}
+            selected={view}
+            setSelected={setView}
+          />
+        </div>
+        <div id="main-content">
+          {!display && commpkgData ? (
+            view === "gantt" ? (
+              <CommpkgGantt commpkgs={commpkgData.commpkgs} />
+            ) : view === "analytics" ? (
+              <CommpkgAnalytics commpkgs={commpkgData.commpkgs} />
+            ) : (
+              <CommpkgTable commpkgs={commpkgData.commpkgs} />
+            )
           ) : (
-            <CommpkgGantt commpkgs={commpkgData.commpkgs} />
-          )
-        ) : (
-          !display && <h1>Get Data</h1>
-        )}
-        {display && (
-          <div>
-            <br />
-            <br />
-            <br />
-            <br />
-            <center>
-              <StarProgress size={48} />
-            </center>
-          </div>
-        )}
+            !display && <h1>Get Data</h1>
+          )}
+          {display && (
+            <div>
+              <br />
+              <br />
+              <br />
+              <br />
+              <center>
+                <StarProgress size={48} />
+              </center>
+            </div>
+          )}
+        </div>
       </div>
       <CreateCommpkg
         show={showCreate}
-        handleClose={handleCreateClose}
+        handleClose={handleCreate}
         selectedItem={null}
       />
     </>

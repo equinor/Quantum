@@ -6,7 +6,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { CommpkgItem, CommpkgData } from "./CommpkgData";
 import { ColDef } from "ag-grid-community";
 import CommpkgSideSheet from "./CommpkgSideheet";
-import { Card } from "react-bootstrap";
+import { Card, Stack } from "react-bootstrap";
+import { Typography } from "@equinor/eds-core-react";
 
 export const CommpkgTable: React.FC<CommpkgData> = (props) => {
   const commpkgs = props.commpkgs.items;
@@ -65,31 +66,18 @@ export const CommpkgTable: React.FC<CommpkgData> = (props) => {
 
   return (
     <div>
-      <Card
-        data-bs-theme="dark"
-        className="custom-card"
-        style={{
-          height: "50px",
-          width: "120px",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Card.Body>
-          <Card.Title
-            style={{
-              fontSize: "14px",
-            }}
-          >
-            Total:
-          </Card.Title>
-          <Card.Text>{commpkgCount}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Stack direction="horizontal" style={{ backgroundColor: "white" }}>
+        {" "}
+        <Card>
+          <Card.Header>
+            <Typography variant="h5">Total: {commpkgCount}</Typography>
+          </Card.Header>
+        </Card>
+      </Stack>
 
       <div
-        className="ag-theme-quartz-dark" // applying the Data Grid theme
-        style={{ height: "80vh" }} // the Data Grid will fill the size of the parent container
+        className="ag-theme-quartz" // applying the Data Grid theme
+        style={{ height: "90vh" }} // the Data Grid will fill the size of the parent container
       >
         <AgGridReact
           ref={gridRef}

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Offcanvas, Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
-import { TagData, TagItem } from "./TagData";
+import { createTag, TagData, TagItem } from "./TagData";
+import { SideSheet, Button } from "@equinor/eds-core-react";
 
 interface CreateTagProps {
   show: boolean;
@@ -34,33 +35,7 @@ const CreateTag: React.FC<CreateTagProps> = ({
     const newTagId = uuidv4();
     setTagId("tag-" + newTagId);
     console.log(tagId);
-    const mutation = `
-            mutation createTag(
-        $tagId: String!,
-        $tagNo: String!,
-        $description: String!,
-        $discipline: String!,
-        $register: String!,
-        $location: String!,
-        $status: String!,
-
-      ) {
-        createTag(
-          item: {
-            TagId: $tagId,
-            TagNo: $tagNo,
-            Description: $description,
-            Discipline: $discipline,
-            Register: $register
-            Status: $status
-            Location: $location
-        
-          }
-        ) {
-          result
-        }
-      }
-    `;
+    const mutation = createTag;
     const input = {
       tagId: tagId,
       tagNo: tagNo,
@@ -88,54 +63,46 @@ const CreateTag: React.FC<CreateTagProps> = ({
   };
 
   return (
-    <Offcanvas
-      show={show}
-      onHide={handleClose}
-      placement="end"
-      style={{ width: "800px" }}
+    <SideSheet
+      title={"Create Tag "}
+      open={show}
+      onClose={handleClose}
+      style={{
+        height: "100%",
+        width: "800px",
+      }}
     >
-      <Offcanvas.Header
-        closeButton
-        className="custom-close-button"
-        style={{ backgroundColor: "#323539", color: "#ffffff" }}
-      >
-        <Offcanvas.Title>Create New System</Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="tagNo">
-            <Form.Label>TagNo</Form.Label>
-            <Form.Control
-              type="text"
-              value={tagNo}
-              onChange={(e) => setTagNo(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formSubSystemNo">
-            <Form.Label>Discipline</Form.Label>
-            <Form.Control
-              type="text"
-              value={discipline}
-              onChange={(e) => setDiscipline(e.target.value)}
-              required
-            />
-          </Form.Group>
-          <Form.Group controlId="formSystemDescription">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </Form.Group>
-          <br />
-          <Button variant="secondary" type="submit">
-            Create Tag
-          </Button>
-        </Form>
-      </Offcanvas.Body>
-    </Offcanvas>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="tagNo">
+          <Form.Label>TagNo</Form.Label>
+          <Form.Control
+            type="text"
+            value={tagNo}
+            onChange={(e) => setTagNo(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="formSubSystemNo">
+          <Form.Label>Discipline</Form.Label>
+          <Form.Control
+            type="text"
+            value={discipline}
+            onChange={(e) => setDiscipline(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="formSystemDescription">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </Form.Group>
+        <br />
+        <Button type="submit">Create Tag</Button>
+      </Form>
+    </SideSheet>
   );
 };
 

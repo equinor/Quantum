@@ -46,7 +46,7 @@ export const Login = () => {
 
   return (
     <Button
-      variant="outline-light"
+      variant="outline"
       className="ml-auto"
       onClick={isAuthenticated ? handleLogout : handleLogin}
       title={isAuthenticated ? "Sign Out" : "Sign In"}

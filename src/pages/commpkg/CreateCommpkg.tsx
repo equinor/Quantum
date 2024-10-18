@@ -1,13 +1,12 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import { Offcanvas, Form, Stack } from "react-bootstrap";
+import { Form, Stack } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { v4 as uuidv4 } from "uuid";
-import { CommpkgData, CommpkgItem } from "./CommpkgData";
+import { CommpkgData, CommpkgItem, createCommpkg } from "./CommpkgData";
 import { SubSystemData } from "../subsystem/SubSystemData";
 import { ProjectMilestone, SafetyMilestone } from "../../library/Milestone";
 import { Phase } from "../../library/Phase";
 import { Identifier } from "../../library/Identifier";
-import { createCommpkg } from "../../graphql/Queries";
 import "./commpkgTheme.css";
 import {
   Button,
@@ -16,6 +15,7 @@ import {
   AutocompleteChanges,
   StarProgress,
   TextField,
+  SideSheet,
 } from "@equinor/eds-core-react";
 
 interface CreateSubSystemProps {
@@ -168,143 +168,123 @@ const CreateCommpkg: React.FC<CreateSubSystemProps> = ({
   };
 
   return (
-    <Offcanvas
-      show={show}
-      onHide={handleClose}
-      placement="end"
-      style={{ width: "1000px" }}
+    <SideSheet
+      title={"Create Commpkg"}
+      open={show}
+      onClose={handleClose}
+      style={{
+        height: "100%",
+        width: "800px",
+      }}
     >
-      <Offcanvas.Header
-        closeButton
-        className="custom-close-button"
-        style={{ backgroundColor: "#323539", color: "#ffffff" }}
-      >
-        <Offcanvas.Title>Create New Commpkg</Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
-        <Form onSubmit={handleSubmit}>
-          <p>Commpkg No</p>
-          <TextField
-            id="commpkgNo"
-            value={formData.CommpkgNo}
-            onChange={setFormText("CommpkgNo")}
-          />
-          <br />
-          <p>Description</p>
-          <TextField
-            id="description"
-            multiline
-            rowsMax={10}
-            value={formData.Description}
-            onChange={setFormText("Description")}
-          />
-          <br />
-          <Autocomplete
-            label=""
-            options={Object.values(SafetyMilestone)}
-            onOptionsChange={setSelectedEnum("SafetyMilestone")}
-            style={{ color: "black", backgroundColor: "black" }}
-            placeholder="SafetyMilestone"
-            className="auto"
-          />
-          <br />
-          <Autocomplete
-            label=""
-            options={Object.values(ProjectMilestone)}
-            onOptionsChange={setSelectedEnum("ProjectMilestone")}
-            style={{ color: "black", backgroundColor: "black" }}
-            placeholder="ProjectMilestone"
-            className="auto"
-          />
-          <br />
-          <Autocomplete
-            label=""
-            options={Object.values(Phase)}
-            onOptionsChange={setSelectedEnum("Phase")}
-            style={{ color: "black", backgroundColor: "black" }}
-            placeholder="Phase"
-            className="auto"
-          />
-          <br />
-          <Autocomplete
-            label=""
-            options={Object.values(Identifier)}
-            onOptionsChange={setSelectedEnum("Identifier")}
-            style={{ color: "black", backgroundColor: "black" }}
-            placeholder="Identifier"
-            className="auto"
-          />
-          <br />
-          <p>Comment</p>
-          <TextField
-            id="Comment"
-            multiline
-            rowsMax={10}
-            value={formData.Comment}
-            onChange={setFormText("Comment")}
-          />
-          <br />
-          <Autocomplete
-            label=""
-            options={
-              subSystem
-                ? subSystem.subSystems.items.map((item) => item.SubSystemNo)
-                : []
+      <Form onSubmit={handleSubmit}>
+        <TextField
+          label="Commpkg No"
+          id="commpkgNo"
+          value={formData.CommpkgNo}
+          onChange={setFormText("CommpkgNo")}
+        />
+        <br />
+        <Autocomplete
+          label="Sub System"
+          options={
+            subSystem
+              ? subSystem.subSystems.items.map((item) => item.SubSystemNo)
+              : []
+          }
+          onOptionsChange={setSelectedEnum("SubSystemNo")}
+          placeholder="Select Sub System"
+        />
+        <br />
+        <Autocomplete
+          label="Identifier"
+          options={Object.values(Identifier)}
+          onOptionsChange={setSelectedEnum("Identifier")}
+          placeholder="Select Identifier"
+        />
+        <br />
+        <TextField
+          label="Description"
+          id="description"
+          multiline
+          rowsMax={10}
+          value={formData.Description}
+          onChange={setFormText("Description")}
+        />
+        <br />
+        <Autocomplete
+          label="Safety Milestone"
+          options={Object.values(SafetyMilestone)}
+          onOptionsChange={setSelectedEnum("SafetyMilestone")}
+          placeholder="Select Safety Milestone"
+        />
+        <br />
+        <Autocomplete
+          label="Project Milestone"
+          options={Object.values(ProjectMilestone)}
+          onOptionsChange={setSelectedEnum("ProjectMilestone")}
+          placeholder="Select Project Milestone"
+        />
+        <br />
+        <Autocomplete
+          label="Phase"
+          options={Object.values(Phase)}
+          onOptionsChange={setSelectedEnum("Phase")}
+          placeholder="Select Phase"
+        />
+        <br />
+        <TextField
+          id="Progress"
+          label="Progress"
+          value={formData.Progress}
+          onChange={setFormFloat("Progress")}
+        />
+        <br />
+        <TextField
+          label="Estimate"
+          id="Estimate"
+          value={formData.Estimate}
+          onChange={setFormFloat("Estimate")}
+        />
+        <br />
+        <Stack direction="horizontal" gap={3}>
+          {" "}
+          <DatePicker
+            label="Planned Start"
+            value={formData.PlannedStart}
+            onChange={(date: Date | null) =>
+              setFormData({
+                ...formData,
+                PlannedStart: date,
+              })
             }
-            onOptionsChange={setSelectedEnum("SubSystemNo")}
-            style={{ color: "black", backgroundColor: "black" }}
-            placeholder="SubSystemNo"
-            className="auto"
-          />
-          <br />
-          <p>Progress</p>
-          <TextField
-            id="Progress"
-            value={formData.Progress}
-            onChange={setFormFloat("Progress")}
-          />
-          <br />
-          <p>Estimate</p>
-          <TextField
-            id="Estimate"
-            value={formData.Estimate}
-            onChange={setFormFloat("Estimate")}
-          />
-          <Stack direction="horizontal" gap={5}>
-            <Form.Group controlId="formActualStart">
-              <Form.Label>Planned Start</Form.Label>
-              <DatePicker
-                value={formData.PlannedStart}
-                onChange={(date: Date | null) =>
-                  setFormData({
-                    ...formData,
-                    PlannedStart: date,
-                  })
-                }
-              ></DatePicker>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Planned End</Form.Label>
-              <DatePicker
-                value={formData.PlannedEnd}
-                onChange={(date: Date | null) =>
-                  setFormData({
-                    ...formData,
-                    PlannedEnd: date,
-                  })
-                }
-              ></DatePicker>
-            </Form.Group>
-          </Stack>
-          <br />
-          <br />
-          <br />
-          <Button type="submit">
-            {loading ? <StarProgress size={16} /> : "Create Commpkg "}
-          </Button>
-        </Form>
-      </Offcanvas.Body>
-    </Offcanvas>
+          ></DatePicker>
+          <DatePicker
+            label="Planned End"
+            value={formData.PlannedEnd}
+            onChange={(date: Date | null) =>
+              setFormData({
+                ...formData,
+                PlannedEnd: date,
+              })
+            }
+          ></DatePicker>
+        </Stack>
+        <br />
+        <TextField
+          label="Comment"
+          id="Comment"
+          multiline
+          rowsMax={10}
+          value={formData.Comment}
+          onChange={setFormText("Comment")}
+        />
+        <br />
+        <Button type="submit">
+          {loading ? <StarProgress size={16} /> : "Create Commpkg "}
+        </Button>
+      </Form>
+    </SideSheet>
   );
 };
 

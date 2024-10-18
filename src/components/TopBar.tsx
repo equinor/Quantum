@@ -66,7 +66,7 @@ const TopBar: React.FC = () => {
   };
 
   return (
-    <Navbar bg="dark" data-bs-theme="dark" className="navbarStyle">
+    <Navbar bg="light" data-bs-theme="light" className="navbarStyle">
       <Navbar.Brand className="brand" as={Link} to="/">
         <img src={FusionIcon} alt="Fusion Icon" className="fusion-icon" />{" "}
         Quantum
@@ -76,7 +76,7 @@ const TopBar: React.FC = () => {
         {isAuthenticated ? (
           <Nav className="mr-auto">
             <Dropdown className="dropdown-padding">
-              <Dropdown.Toggle variant="outline-light" id="dropdown-search">
+              <Dropdown.Toggle variant="outline" id="dropdown-search">
                 Search
               </Dropdown.Toggle>
               <Dropdown.Menu>
@@ -98,7 +98,7 @@ const TopBar: React.FC = () => {
               </Dropdown.Menu>
             </Dropdown>
             <Dropdown className="dropdown-padding">
-              <Dropdown.Toggle variant="outline-light" id="dropdown-basic">
+              <Dropdown.Toggle variant="outline" id="dropdown-basic">
                 Report
               </Dropdown.Toggle>
 

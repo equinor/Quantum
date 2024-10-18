@@ -23,7 +23,7 @@ export const CommpkgAnalytics: React.FC<CommpkgData> = (props) => {
 
   const [chartOptions, setChartOptions] = useState<AgChartOptions>({
     theme: {
-      baseTheme: "ag-default-dark", // Set the base theme to dark
+      baseTheme: "ag-default", // Set the base theme to dark
     },
     data: transformedData,
     series: [
@@ -69,11 +69,11 @@ export const CommpkgAnalytics: React.FC<CommpkgData> = (props) => {
   }, [commpkgs]);
 
   return (
-    <div className="ag-theme-quartz-dark" style={{ height: "80vh" }}>
+    <div className="ag-theme-quartz" style={{ height: "80vh" }}>
       <AgCharts
         options={chartOptions}
         className="chart"
-        style={{ width: "100%", height: "80vh" }}
+        style={{ width: "100%", height: "85vh" }}
       />
     </div>
   );

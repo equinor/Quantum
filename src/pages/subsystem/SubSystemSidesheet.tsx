@@ -1,9 +1,8 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Button, Form, Offcanvas } from "react-bootstrap";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
-import { SubSystemData, SubSystemItem } from "./SubSystemData";
+import { SubSystemData, SubSystemItem, updateSubSystem } from "./SubSystemData";
 import "../../App.css";
-import { TextField } from "@equinor/eds-core-react";
+import { SideSheet, TextField, Button } from "@equinor/eds-core-react";
 
 interface SubSystemSideSheetProps {
   show: boolean;
@@ -42,27 +41,9 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
     }
   }, [selectedItem]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const mutation = `
-      mutation updateSubSystem(
-        $subSystemId: String!,
-        $subSystemNo: String!,
-        $systemNo: String!,
-        $description: String!
-      ) {
-       updateSubSystem(
-       SubSystemId: $subSystemId,
-          item: {
-            SubSystemNo: $subSystemNo,
-            SystemNo: $systemNo,
-            Description: $description
-          }
-        ) {
-          result
-        }
-      }
-    `;
+    const mutation = updateSubSystem;
     const variables = {
       subSystemId: formData.SubSystemId,
       subSystemNo: formData.SubSystemNo,
@@ -106,55 +87,46 @@ const SubSystemSideSheet: React.FC<SubSystemSideSheetProps> = ({
   };
 
   return (
-    <Offcanvas
-      show={show}
-      onHide={handleClose}
-      placement="end"
-      style={{ width: "800px" }}
+    <SideSheet
+      title={"Sub System: " + selectedItem?.SubSystemNo}
+      open={show}
+      onClose={handleClose}
+      style={{
+        height: "100%",
+        width: "800px",
+      }}
     >
-      <Offcanvas.Header
-        closeButton
-        className="custom-close-button d-flex justify-content-between"
-        style={{ backgroundColor: "#323539", color: "#ffffff" }}
-      >
-        <Offcanvas.Title>Sub System</Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body style={{ backgroundColor: "#323539", color: "#ffffff" }}>
-        {selectedItem ? (
-          <div>
-            <Form onSubmit={handleSubmit}>
-              <p>SubSystemNo</p>
-              <TextField
-                id="SubSystemNo"
-                value={formData.SubSystemNo}
-                onChange={setFormText("SubSystemNo")}
-              />
-              <br />
-              <p>Description</p>
-              <TextField
-                id="description"
-                multiline
-                rowsMax={10}
-                value={formData.Description}
-                onChange={setFormText("Description")}
-              />
-              <Button variant="secondary" type="submit">
-                Update Sub System
-              </Button>
-              <Button
-                className="delete-btn"
-                variant="danger"
-                onClick={deleteSubSystem}
-              >
-                Delete Sub System
-              </Button>
-            </Form>
-          </div>
-        ) : (
-          <p>No system selected.</p>
-        )}
-      </Offcanvas.Body>
-    </Offcanvas>
+      {selectedItem ? (
+        <div>
+          <TextField
+            id="SubSystemNo"
+            label="Sub System"
+            value={formData.SubSystemNo}
+            onChange={setFormText("SubSystemNo")}
+          />
+          <br />
+          <TextField
+            id="description"
+            label="Description"
+            multiline
+            rowsMax={10}
+            value={formData.Description}
+            onChange={setFormText("Description")}
+          />
+          <br />
+          <Button onClick={handleSubmit}>Update Sub System</Button>
+          <Button
+            className="delete-btn"
+            color="danger"
+            onClick={deleteSubSystem}
+          >
+            Delete Sub System
+          </Button>
+        </div>
+      ) : (
+        <p>No system selected.</p>
+      )}
+    </SideSheet>
   );
 };
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { SubSystemTable } from "./SubSystemTable";
 import "../../App.css";
-import { Button, Spinner } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
+import { Button } from "@equinor/eds-core-react";
 import { useRequestGraphQL } from "../../graphql/GetGraphQL";
 import { SubSystemData } from "./SubSystemData";
 import CreateSubSystem from "./CreateSubSystem";
@@ -42,7 +43,7 @@ export const System: React.FC = () => {
   return (
     <>
       <div className="center-content">
-        <Button variant="secondary" onClick={fetchData} disabled={display}>
+        <Button onClick={fetchData} disabled={display}>
           {display ? (
             <Spinner
               as="span"
@@ -55,9 +56,7 @@ export const System: React.FC = () => {
             "Get Sub Systems"
           )}
         </Button>
-        <Button variant="secondary" onClick={handleCreateSystemShow}>
-          Create Sub System
-        </Button>
+        <Button onClick={handleCreateSystemShow}>Create Sub System</Button>
         {subSystemmData ? (
           <SubSystemTable subSystems={subSystemmData.subSystems} />
         ) : (

@@ -5,11 +5,9 @@ import { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { useEffect, useRef, useState } from "react";
-import { Card } from "react-bootstrap";
 
 export const SystemTable: React.FC<SystemData> = (props) => {
   const system = props.systems.items;
-  const [systemCount, setSystemCount] = useState(system.length);
 
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState<SystemItem | null>(null);
@@ -48,23 +46,11 @@ export const SystemTable: React.FC<SystemData> = (props) => {
     setColDefs(generateColDefs());
   }, [props.systems]); // Dependency array to update colDefs when props change
 
-  const onFilterChanged = () => {
-    if (gridRef.current) {
-      setSystemCount(gridRef.current.api.getDisplayedRowCount());
-    }
-  };
-
   return (
     <div>
-      <Card data-bs-theme="dark" className="custom-card">
-        <Card.Body>
-          <Card.Title>Total</Card.Title>
-          <Card.Text>{systemCount}</Card.Text>
-        </Card.Body>
-      </Card>
       <div
-        className="ag-theme-quartz-dark" // applying the Data Grid theme
-        style={{ height: "84vh" }} // the Data Grid will fill the size of the parent container
+        className="ag-theme-quartz" // applying the Data Grid theme
+        style={{ height: "90vh" }} // the Data Grid will fill the size of the parent container
       >
         <AgGridReact
           ref={gridRef}
@@ -76,7 +62,6 @@ export const SystemTable: React.FC<SystemData> = (props) => {
               handleShow(item);
             }
           }} // Handle row click
-          onFilterChanged={onFilterChanged} // Update count on filter change
         />
       </div>
       <SystemSidesheet

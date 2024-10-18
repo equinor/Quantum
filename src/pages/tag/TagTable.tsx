@@ -6,10 +6,11 @@ import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the 
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Optional Theme applied to the Data Grid
 import { useEffect, useRef, useState } from "react";
 import { Card } from "react-bootstrap";
+import { Typography } from "@equinor/eds-core-react";
 
 export const TagTable: React.FC<TagData> = (props) => {
   const tags = props.tags.items;
-  const [tagCount, setTagCount] = useState(tags.length);
+  const [total, setTagCount] = useState(tags.length);
 
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState<TagItem | null>(null);
@@ -54,15 +55,14 @@ export const TagTable: React.FC<TagData> = (props) => {
 
   return (
     <div>
-      <Card data-bs-theme="dark" className="custom-card">
-        <Card.Body>
-          <Card.Title>Total</Card.Title>
-          <Card.Text>{tagCount}</Card.Text>
-        </Card.Body>
+      <Card>
+        <Card.Header>
+          <Typography variant="h5">Total: {total}</Typography>
+        </Card.Header>
       </Card>
       <div
-        className="ag-theme-quartz-dark" // applying the Data Grid theme
-        style={{ height: "80vh" }} // the Data Grid will fill the size of the parent container
+        className="ag-theme-quartz" // applying the Data Grid theme
+        style={{ height: "85vh" }} // the Data Grid will fill the size of the parent container
       >
         <AgGridReact
           ref={gridRef}
